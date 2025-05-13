@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Gestión de Editoriales - Biblioteca</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body class="bg-gray-50">
+    <div class="min-h-screen flex flex-col">
+      <nav class="bg-indigo-700 text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="flex justify-between h-16">
+            <div class="flex items-center space-x-4">
+              <a href="/" class="flex items-center space-x-2">
+                <i class="fas fa-book-open text-2xl text-indigo-200"></i>
+                <h1 class="text-2xl font-bold text-white">Biblioteca</h1>
+              </a>
+              <div class="hidden md:flex space-x-4">
+                <a
+                  href="/books"
+                  class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                  >Libros</a
+                >
+                <a
+                  href="/authors"
+                  class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                  >Autores</a
+                >
+                <a
+                  href="/categories"
+                  class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                  >Categorías</a
+                >
+                <a
+                  href="/publishers"
+                  class="bg-indigo-800 text-white px-3 py-2 rounded-md text-sm font-medium"
+                  >Editoriales</a
+                >
+              </div>
+            </div>
+            <div class="flex items-center">
+              <a
+                href="/publishers/add"
+                class="group inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-white hover:bg-indigo-50 shadow-sm transition-all duration-200 ease-in-out"
+              >
+                <i class="fas fa-plus mr-2"></i>
+                <span>Nueva Editorial</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <div class="max-w-7xl w-full mx-auto py-8 px-4 sm:px-6 lg:px-8 flex-grow">
+        <% if (messages.success) { %>
+        <div
+          class="mb-6 rounded-lg bg-green-50 p-4 border-l-4 border-green-500 animate-fade-in"
+        >
+          <div class="flex items-center">
+            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+            <p class="text-sm font-medium text-green-800">
+              <%- messages.success %>
+            </p>
+          </div>
+        </div>
+        <% } %> <% if (messages.error) { %>
+        <div
+          class="mb-6 rounded-lg bg-red-50 p-4 border-l-4 border-red-500 animate-fade-in"
+        >
+          <div class="flex items-center">
+            <i class="fas fa-exclamation-circle text-red-500 mr-3"></i>
+            <p class="text-sm font-medium text-red-800">
+              <%- messages.error %>
+            </p>
+          </div>
+        </div>
+        <% } %>
+
+        <div class="bg-white shadow-sm rounded-lg overflow-hidden">
+          <div class="p-6">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Editoriales</h2>
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead>
+                  <tr class="bg-gray-50">
+                    <th
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      ID
+                    </th>
+                    <th
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Nombre
+                    </th>
+                    <th
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Estado
+                    </th>
+                    <th
+                      class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Acciones
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                  <% if(data.length) { %> <% data.forEach(function(publisher){
+                  %>
+                  <tr class="hover:bg-gray-50 transition-colors duration-200">
+                    <td
+                      class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
+                    >
+                      <%= publisher.id %>
+                    </td>
+                    <td
+                      class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"
+                    >
+                      <%= publisher.name %>
+                    </td>
+                    <td
+                      class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
+                    >
+                      <span
+                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%= publisher.state === 'activo' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' %>"
+                      >
+                        <%= publisher.state %>
+                      </span>
+                    </td>
+                    <td
+                      class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2"
+                    >
+                      <a
+                        href="/publishers/edit/<%= publisher.id %>"
+                        class="text-indigo-600 hover:text-indigo-900"
+                      >
+                        <i class="fas fa-edit"></i>
+                      </a>
+                      <a
+                        href="/publishers/delete/<%= publisher.id %>"
+                        onclick="return confirm('¿Estás seguro de que deseas eliminar esta editorial?')"
+                        class="text-red-600 hover:text-red-900"
+                      >
+                        <i class="fas fa-trash-alt"></i>
+                      </a>
+                    </td>
+                  </tr>
+                  <% }); %> <% } else { %>
+                  <tr>
+                    <td
+                      colspan="4"
+                      class="px-6 py-4 text-center text-sm text-gray-500"
+                    >
+                      No hay editoriales registradas
+                    </td>
+                  </tr>
+                  <% } %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="bg-white border-t border-gray-200 mt-auto">
+        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+          <p class="text-center text-sm text-gray-500">
+            © 2025 Biblioteca. Todos los derechos reservados.
+          </p>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
