@@ -21,12 +21,14 @@ router.get("/", function (req, res, next) {
 router.get("/add", function (req, res, next) {
   res.render("categories/add", {
     name: "",
+    state: "activo", // Estado por defecto
   });
 });
 
 // Agregar categoría
 router.post("/add", function (req, res, next) {
   let name = req.body.name;
+  let state = req.body.state || "activo";
   let errors = false;
 
   if (name.length === 0) {
@@ -34,27 +36,61 @@ router.post("/add", function (req, res, next) {
     req.flash("error", "Por favor ingrese el nombre de la categoría");
     res.render("categories/add", {
       name: name,
+      state: state,
+    });
+  }
+
+  // Validar que el estado sea válido
+  if (state !== "activo" && state !== "inactivo") {
+    errors = true;
+    req.flash("error", "El estado debe ser 'activo' o 'inactivo'");
+    res.render("categories/add", {
+      name: name,
+      state: "activo",
     });
   }
 
   if (!errors) {
     var form_data = {
       name: name,
-      state: "activo",
+      state: state,
     };
 
+    // Primero verificar si ya existe una categoría con el mismo nombre
     dbConn.query(
-      "INSERT INTO categories SET ?",
-      form_data,
-      function (err, result) {
+      "SELECT id FROM categories WHERE name = ?",
+      [name],
+      function (err, rows) {
         if (err) {
           req.flash("error", err);
           res.render("categories/add", {
             name: form_data.name,
+            state: form_data.state,
+          });
+        } else if (rows.length > 0) {
+          req.flash("error", "Ya existe una categoría con ese nombre");
+          res.render("categories/add", {
+            name: form_data.name,
+            state: form_data.state,
           });
         } else {
-          req.flash("success", "Categoría agregada exitosamente");
-          res.redirect("/categories");
+          // Si no existe, insertamos la nueva categoría
+          dbConn.query(
+            "INSERT INTO categories SET ?",
+            form_data,
+            function (err, result) {
+              if (err) {
+                req.flash("error", err);
+                res.render("categories/add", {
+                  name: form_data.name,
+                  state: form_data.state,
+                });
+              } else {
+                req.flash("success", "Categoría agregada exitosamente");
+                res.redirect("/categories");
+              }
+            }
+          );
         }
       }
     );
@@ -65,9 +101,13 @@ router.post("/add", function (req, res, next) {
 router.get("/edit/(:id)", function (req, res, next) {
   let id = req.params.id;
   dbConn.query(
-    "SELECT * FROM categories WHERE id = " + id,
+    "SELECT * FROM categories WHERE id = ?",
+    [id],
     function (err, rows, fields) {
-      if (err) throw err;
+      if (err) {
+        req.flash("error", err);
+        res.redirect("/categories");
+      }
       if (rows.length <= 0) {
         req.flash("error", "Categoría no encontrada con id = " + id);
         res.redirect("/categories");
@@ -99,15 +139,28 @@ router.post("/update/:id", function (req, res, next) {
     });
   }
 
+  // Validar que el estado sea válido
+  if (state !== "activo" && state !== "inactivo") {
+    errors = true;
+    req.flash("error", "El estado debe ser 'activo' o 'inactivo'");
+    res.render("categories/edit", {
+      id: req.params.id,
+      name: name,
+      state: "activo",
+    });
+  }
+
   if (!errors) {
     var form_data = {
       name: name,
       state: state,
     };
+
+    // Verificar si existe otra categoría con el mismo nombre (excepto esta misma)
     dbConn.query(
-      "UPDATE categories SET ? WHERE id = " + id,
-      form_data,
-      function (err, result) {
+      "SELECT id FROM categories WHERE name = ? AND id != ?",
+      [name, id],
+      function (err, rows) {
         if (err) {
           req.flash("error", err);
           res.render("categories/edit", {
@@ -115,9 +168,32 @@ router.post("/update/:id", function (req, res, next) {
             name: form_data.name,
             state: form_data.state,
           });
+        } else if (rows.length > 0) {
+          req.flash("error", "Ya existe otra categoría con ese nombre");
+          res.render("categories/edit", {
+            id: req.params.id,
+            name: form_data.name,
+            state: form_data.state,
+          });
         } else {
-          req.flash("success", "Categoría actualizada exitosamente");
-          res.redirect("/categories");
+          // Si no existe otra categoría con el mismo nombre, actualizamos
+          dbConn.query(
+            "UPDATE categories SET ? WHERE id = ?",
+            [form_data, id],
+            function (err, result) {
+              if (err) {
+                req.flash("error", err);
+                res.render("categories/edit", {
+                  id: req.params.id,
+                  name: form_data.name,
+                  state: form_data.state,
+                });
+              } else {
+                req.flash("success", "Categoría actualizada exitosamente");
+                res.redirect("/categories");
+              }
+            }
+          );
         }
       }
     );
@@ -127,15 +203,36 @@ router.post("/update/:id", function (req, res, next) {
 // Eliminar categoría
 router.get("/delete/(:id)", function (req, res, next) {
   let id = req.params.id;
+
+  // Primero verificar si la categoría está en uso
   dbConn.query(
-    "DELETE FROM categories WHERE id = " + id,
-    function (err, result) {
+    "SELECT COUNT(*) as count FROM books WHERE category_id = ?",
+    [id],
+    function (err, rows) {
       if (err) {
         req.flash("error", err);
         res.redirect("/categories");
-      } else {
-        req.flash("success", "Categoría eliminada exitosamente");
+      } else if (rows[0].count > 0) {
+        req.flash(
+          "error",
+          "No se puede eliminar la categoría porque está siendo utilizada por uno o más libros"
+        );
         res.redirect("/categories");
+      } else {
+        // Si no está en uso, procedemos a eliminarla
+        dbConn.query(
+          "DELETE FROM categories WHERE id = ?",
+          [id],
+          function (err, result) {
+            if (err) {
+              req.flash("error", err);
+              res.redirect("/categories");
+            } else {
+              req.flash("success", "Categoría eliminada exitosamente");
+              res.redirect("/categories");
+            }
+          }
+        );
       }
     }
   );
