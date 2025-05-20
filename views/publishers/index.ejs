@@ -15,50 +15,7 @@
   </head>
   <body class="bg-gray-50">
     <div class="min-h-screen flex flex-col">
-      <nav class="bg-indigo-700 text-white shadow-lg">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div class="flex justify-between h-16">
-            <div class="flex items-center space-x-4">
-              <a href="/" class="flex items-center space-x-2">
-                <i class="fas fa-book-open text-2xl text-indigo-200"></i>
-                <h1 class="text-2xl font-bold text-white">Biblioteca</h1>
-              </a>
-              <div class="hidden md:flex space-x-4">
-                <a
-                  href="/books"
-                  class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                  >Libros</a
-                >
-                <a
-                  href="/authors"
-                  class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                  >Autores</a
-                >
-                <a
-                  href="/categories"
-                  class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                  >Categorías</a
-                >
-                <a
-                  href="/publishers"
-                  class="bg-indigo-800 text-white px-3 py-2 rounded-md text-sm font-medium"
-                  >Editoriales</a
-                >
-              </div>
-            </div>
-            <div class="flex items-center">
-              <a
-                href="/publishers/add"
-                class="group inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-white hover:bg-indigo-50 shadow-sm transition-all duration-200 ease-in-out"
-              >
-                <i class="fas fa-plus mr-2"></i>
-                <span>Nueva Editorial</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </nav>
-
+      
       <div class="max-w-7xl w-full mx-auto py-8 px-4 sm:px-6 lg:px-8 flex-grow">
         <% if (messages.success) { %>
         <div
@@ -84,22 +41,37 @@
         </div>
         <% } %>
 
-        <div class="bg-white shadow-sm rounded-lg overflow-hidden">
-          <div class="p-6">
-            <h2 class="text-2xl font-bold text-gray-800 mb-6">Editoriales</h2>
+        <div
+          class="bg-white shadow rounded-xl overflow-hidden border border-gray-100"
+        >
+          <div>
+            <div
+              class="px-6 py-4 bg-gradient-to-r from-indigo-700 to-indigo-600"
+            >
+              <h2 class="text-xl font-semibold text-white">
+                Catálogo de Editoriales
+              </h2>
+            </div>
+
+            <% if(data.length) { %>
             <div class="overflow-x-auto">
               <table class="min-w-full divide-y divide-gray-200">
-                <thead>
-                  <tr class="bg-gray-50">
+                <thead class="bg-gray-50">
+                  <tr>
                     <th
                       class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
-                      ID
+                      #
                     </th>
                     <th
                       class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
                       Nombre
+                    </th>
+                    <th
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Contacto
                     </th>
                     <th
                       class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
@@ -114,22 +86,74 @@
                   </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
-                  <% if(data.length) { %> <% data.forEach(function(publisher){
-                  %>
-                  <tr class="hover:bg-gray-50 transition-colors duration-200">
+                  <% data.forEach((publisher, index) => { %>
+                  <tr
+                    class="hover:bg-amber-50 transition-colors duration-150 ease-in-out"
+                  >
                     <td
                       class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
                     >
-                      <%= publisher.id %>
+                      <%= index + 1 %>
                     </td>
-                    <td
-                      class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"
-                    >
-                      <%= publisher.name %>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="flex flex-col">
+                        <div class="text-sm font-medium text-gray-900">
+                          <%= publisher.name %>
+                        </div>
+                        <% if (publisher.website) { %>
+                        <a
+                          href="<%= publisher.website %>"
+                          target="_blank"
+                          class="text-xs text-amber-600 hover:text-amber-900"
+                        >
+                          <i class="fas fa-external-link-alt mr-1"></i>Sitio web
+                        </a>
+                        <% } %>
+                      </div>
                     </td>
-                    <td
-                      class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
-                    >
+                    <td class="px-6 py-4">
+                      <div class="flex flex-col">
+                        <% if (publisher.contact_info || publisher.email ||
+                        publisher.address) { %>
+                        <div class="flex flex-col gap-1">
+                          <% if (publisher.contact_info) { %>
+                          <div class="text-sm text-gray-900">
+                            <i
+                              class="fas fa-address-card text-gray-400 mr-1"
+                            ></i>
+                            <%= publisher.contact_info %>
+                          </div>
+                          <% } %> <% if (publisher.email) { %>
+                          <div class="text-xs">
+                            <a
+                              href="mailto:<%= publisher.email %>"
+                              class="text-amber-600 hover:text-amber-900"
+                            >
+                              <i class="fas fa-envelope mr-1"></i><%=
+                              publisher.email %>
+                            </a>
+                          </div>
+                          <% } %> <% if (publisher.address) { %>
+                          <div class="text-xs text-gray-500">
+                            <i class="fas fa-map-marker-alt mr-1"></i><%=
+                            publisher.address %>
+                          </div>
+                          <% } %> <% if (publisher.book_count > 0) { %>
+                          <div class="text-xs text-gray-500">
+                            <i class="fas fa-book mr-1"></i><%=
+                            publisher.book_count %> libro<%=
+                            publisher.book_count === 1 ? '' : 's' %>
+                          </div>
+                          <% } %>
+                        </div>
+                        <% } else { %>
+                        <span class="text-sm text-gray-500"
+                          >Sin información de contacto</span
+                        >
+                        <% } %>
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
                       <span
                         class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%= publisher.state === 'activo' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' %>"
                       >
@@ -141,32 +165,57 @@
                     >
                       <a
                         href="/publishers/edit/<%= publisher.id %>"
-                        class="text-indigo-600 hover:text-indigo-900"
+                        class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-amber-700 bg-amber-100 hover:bg-amber-200 transition-colors duration-150"
                       >
-                        <i class="fas fa-edit"></i>
+                        <i class="fas fa-edit mr-1"></i> Editar
                       </a>
                       <a
                         href="/publishers/delete/<%= publisher.id %>"
-                        onclick="return confirm('¿Estás seguro de que deseas eliminar esta editorial?')"
-                        class="text-red-600 hover:text-red-900"
+                        onclick="return confirm('¿Está seguro de que desea eliminar esta editorial?');"
+                        class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-red-700 bg-red-100 hover:bg-red-200 transition-colors duration-150"
                       >
-                        <i class="fas fa-trash-alt"></i>
+                        <i class="fas fa-trash-alt mr-1"></i> Eliminar
                       </a>
                     </td>
                   </tr>
-                  <% }); %> <% } else { %>
-                  <tr>
-                    <td
-                      colspan="4"
-                      class="px-6 py-4 text-center text-sm text-gray-500"
-                    >
-                      No hay editoriales registradas
-                    </td>
-                  </tr>
-                  <% } %>
+                  <% }) %>
                 </tbody>
               </table>
             </div>
+            <% } else { %>
+            <div class="text-center py-16">
+              <div
+                class="mx-auto h-24 w-24 text-indigo-700 bg-indigo-200 rounded-full flex items-center justify-center"
+              >
+                <i class="fas fa-building text-4xl"></i>
+              </div>
+              <h3 class="mt-4 text-lg font-medium text-gray-900">
+                No hay editoriales registradas
+              </h3>
+              <p class="mt-2 text-base text-gray-500">
+                Comienza agregando una nueva editorial.
+              </p>
+              <div class="mt-6">
+                <a
+                  href="/publishers/add"
+                  class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-700 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                >
+                  <i class="fas fa-plus mr-2"></i>
+                  Agregar mi primera editorial
+                </a>
+              </div>
+            </div>
+            <% } %> <% if(data.length) { %>
+            <div class="px-6 py-4 border-t border-gray-200">
+              <a
+                href="/publishers/add"
+                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-amber-600 hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500"
+              >
+                <i class="fas fa-plus mr-2"></i>
+                Nueva Editorial
+              </a>
+            </div>
+            <% } %>
           </div>
         </div>
       </div>
@@ -174,7 +223,7 @@
       <footer class="bg-white border-t border-gray-200 mt-auto">
         <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
           <p class="text-center text-sm text-gray-500">
-            © 2025 Biblioteca. Todos los derechos reservados.
+            © <%= new Date().getFullYear() %> Sistema de Gestión de Biblioteca
           </p>
         </div>
       </footer>

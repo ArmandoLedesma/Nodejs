@@ -28,61 +28,150 @@
         </div>
       </nav>
 
-      <div class="max-w-7xl w-full mx-auto py-8 px-4 sm:px-6 lg:px-8 flex-grow">
-        <% if (messages.error) { %>
-        <div class="mb-6 rounded-lg bg-red-50 p-4 border-l-4 border-red-500 animate-fade-in">
-          <div class="flex items-center">
-            <i class="fas fa-exclamation-circle text-red-500 mr-3"></i>
-            <p class="text-sm font-medium text-red-800">
-              <%- messages.error %>
-            </p>
-          </div>
-        </div>
-        <% } %>
-
-        <div class="bg-white shadow-sm rounded-lg overflow-hidden">
-          <div class="p-6">
-            <div class="flex items-center justify-between mb-6">
-              <h2 class="text-2xl font-bold text-gray-800">Editar Editorial</h2>
-              <a
-                href="/publishers"
-                class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-all duration-200 ease-in-out"
-              >
-                <i class="fas fa-arrow-left mr-2"></i>
-                <span>Volver</span>
-              </a>
+      <div class="py-12">
+        <div class="max-w-md mx-auto sm:px-6 lg:px-8">
+          <div class="bg-white py-8 px-4 shadow-lg sm:rounded-lg sm:px-10 border border-gray-100">
+            <div class="sm:mx-auto sm:w-full sm:max-w-md mb-6">
+              <div class="flex justify-center">
+                <div class="h-16 w-16 rounded-full bg-amber-200 flex items-center justify-center">
+                  <i class="fas fa-edit text-amber-700 text-2xl"></i>
+                </div>
+              </div>
+              <h2 class="mt-4 text-center text-3xl font-extrabold text-gray-900">
+                Editar Editorial
+              </h2>
+              <p class="mt-2 text-center text-sm text-gray-600">
+                Actualiza la información de la editorial
+              </p>
             </div>
+
+            <% if (messages.error) { %>
+            <div class="mb-6 rounded-md bg-red-50 p-4 border-l-4 border-red-500">
+              <div class="flex items-center">
+                <i class="fas fa-exclamation-circle text-red-500 mr-3"></i>
+                <p class="text-sm text-red-700">
+                  <%- messages.error %>
+                </p>
+              </div>
+            </div>
+            <% } %>
 
             <form action="/publishers/update/<%= id %>" method="post">
               <div class="space-y-6">
                 <div>
                   <label for="name" class="block text-sm font-medium text-gray-700">Nombre de la Editorial</label>
-                  <input
-                    type="text"
-                    name="name"
-                    id="name"
-                    value="<%= name %>"
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    required
-                  />
+                  <div class="mt-1 relative rounded-md shadow-sm">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <i class="fas fa-building text-gray-400"></i>
+                    </div>
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      class="pl-10 appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-amber-500 focus:border-amber-500 sm:text-sm"
+                      placeholder="Ingrese el nombre de la editorial"
+                      value="<%= name %>"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label for="contact_info" class="block text-sm font-medium text-gray-700">Información de Contacto</label>
+                  <div class="mt-1 relative rounded-md shadow-sm">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <i class="fas fa-address-card text-gray-400"></i>
+                    </div>
+                    <input
+                      type="text"
+                      id="contact_info"
+                      name="contact_info"
+                      class="pl-10 appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-amber-500 focus:border-amber-500 sm:text-sm"
+                      placeholder="Ej: Nombre del contacto, teléfono"
+                      value="<%= typeof contact_info != 'undefined' ? contact_info : '' %>"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label for="email" class="block text-sm font-medium text-gray-700">Correo Electrónico</label>
+                  <div class="mt-1 relative rounded-md shadow-sm">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <i class="fas fa-envelope text-gray-400"></i>
+                    </div>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      class="pl-10 appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-amber-500 focus:border-amber-500 sm:text-sm"
+                      placeholder="editorial@ejemplo.com"
+                      value="<%= typeof email != 'undefined' ? email : '' %>"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label for="website" class="block text-sm font-medium text-gray-700">Sitio Web</label>
+                  <div class="mt-1 relative rounded-md shadow-sm">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <i class="fas fa-globe text-gray-400"></i>
+                    </div>
+                    <input
+                      type="url"
+                      id="website"
+                      name="website"
+                      class="pl-10 appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-amber-500 focus:border-amber-500 sm:text-sm"
+                      placeholder="https://www.ejemplo.com"
+                      value="<%= typeof website != 'undefined' ? website : '' %>"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label for="address" class="block text-sm font-medium text-gray-700">Dirección</label>
+                  <div class="mt-1 relative rounded-md shadow-sm">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <i class="fas fa-map-marker-alt text-gray-400"></i>
+                    </div>
+                    <input
+                      type="text"
+                      id="address"
+                      name="address"
+                      class="pl-10 appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-amber-500 focus:border-amber-500 sm:text-sm"
+                      placeholder="Dirección completa de la editorial"
+                      value="<%= typeof address != 'undefined' ? address : '' %>"
+                    />
+                  </div>
                 </div>
 
                 <div>
                   <label for="state" class="block text-sm font-medium text-gray-700">Estado</label>
-                  <select
-                    name="state"
-                    id="state"
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  >
-                    <option value="activo" <%= state === 'activo' ? 'selected' : '' %>>Activo</option>
-                    <option value="inactivo" <%= state === 'inactivo' ? 'selected' : '' %>>Inactivo</option>
-                  </select>
+                  <div class="mt-1 relative rounded-md shadow-sm">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <i class="fas fa-toggle-on text-gray-400"></i>
+                    </div>
+                    <select
+                      id="state"
+                      name="state"
+                      class="pl-10 appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-amber-500 focus:border-amber-500 sm:text-sm"
+                    >
+                      <option value="activo" <%= state === 'activo' ? 'selected' : '' %>>Activo</option>
+                      <option value="inactivo" <%= state === 'inactivo' ? 'selected' : '' %>>Inactivo</option>
+                    </select>
+                  </div>
                 </div>
 
-                <div class="flex justify-end">
+                <div class="flex space-x-4">
+                  <a
+                    href="/publishers"
+                    class="flex-1 flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 text-center"
+                  >
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    Cancelar
+                  </a>
                   <button
                     type="submit"
-                    class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    class="flex-1 flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-amber-600 hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500"
                   >
                     <i class="fas fa-save mr-2"></i>
                     Guardar Cambios
@@ -91,14 +180,18 @@
               </div>
             </form>
           </div>
+          
+          <div class="mt-6 text-center">
+            <a href="/publishers" class="text-sm font-medium text-amber-600 hover:text-amber-500">
+              Volver al listado de editoriales
+            </a>
+          </div>
         </div>
       </div>
 
       <footer class="bg-white border-t border-gray-200 mt-auto">
         <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-          <p class="text-center text-sm text-gray-500">
-            © 2025 Biblioteca. Todos los derechos reservados.
-          </p>
+          <p class="text-center text-sm text-gray-500">© <%= new Date().getFullYear() %> Sistema de Gestión de Biblioteca</p>
         </div>
       </footer>
     </div>

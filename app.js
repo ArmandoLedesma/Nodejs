@@ -1,22 +1,22 @@
-var createError = require("http-errors");
-var express = require("express");
-var path = require("path");
-var cookieParser = require("cookie-parser");
-var logger = require("morgan");
+const createError = require("http-errors");
+const express = require("express");
+const path = require("path");
+const cookieParser = require("cookie-parser");
+const logger = require("morgan");
 
-var flash = require("express-flash");
-var session = require("express-session");
-var mysql = require("mysql");
-var connection = require("./lib/db");
+const flash = require("express-flash");
+const session = require("express-session");
+const mysql = require("mysql");
+const connection = require("./lib/db");
 
-var indexRouter = require("./routes/index");
-var usersRouter = require("./routes/users");
-var booksRouter = require("./routes/books");
-var authorsRouter = require("./routes/authors");
-var categoriesRouter = require("./routes/categories");
-var publishersRouter = require("./routes/publishers");
+const indexRouter = require("./routes/index");
+const usersRouter = require("./routes/users");
+const booksRouter = require("./routes/books");
+const authorsRouter = require("./routes/authors");
+const categoriesRouter = require("./routes/categories");
+const publishersRouter = require("./routes/publishers");
 
-var app = express();
+const app = express();
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
