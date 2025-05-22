@@ -2,12 +2,14 @@
 <html lang="es">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />    <title>Editar Categoría - Biblioteca</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Editar Categoría - Biblioteca</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   </head>
   <body class="bg-gray-50">
     <div class="min-h-screen flex flex-col">
+      <!-- Navigation -->
       <nav class="bg-indigo-700 text-white shadow-lg">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div class="flex justify-between h-16">
@@ -27,9 +29,11 @@
         </div>
       </nav>
 
+      <!-- Main Content -->
       <div class="py-12">
         <div class="max-w-md mx-auto sm:px-6 lg:px-8">
           <div class="bg-white py-8 px-4 shadow-lg sm:rounded-lg sm:px-10 border border-gray-100">
+            <!-- Header -->
             <div class="sm:mx-auto sm:w-full sm:max-w-md mb-6">
               <div class="flex justify-center">
                 <div class="h-16 w-16 rounded-full bg-indigo-200 flex items-center justify-center">
@@ -44,96 +48,60 @@
               </p>
             </div>
 
+            <!-- Error Messages -->
             <% if (messages.error) { %>
             <div class="mb-6 rounded-md bg-red-50 p-4 border-l-4 border-red-500">
               <div class="flex items-center">
                 <i class="fas fa-exclamation-circle text-red-500 mr-3"></i>
-                <p class="text-sm font-medium text-red-800">
-                  <%- messages.error %>
-                </p>
+                <p class="text-sm font-medium text-red-800"><%- messages.error %></p>
               </div>
             </div>
             <% } %>
 
-            <form action="/categories/update/<%= id %>" method="post" class="space-y-6">
+            <!-- Form -->
+            <form action="/categories/edit/<%= id %>" method="POST" class="space-y-6">
+              <!-- Name Field -->
               <div>
                 <label for="name" class="block text-sm font-medium text-gray-700">
-                  Nombre de la Categoría
+                  Nombre de la categoría
                 </label>
-                <div class="mt-1 relative rounded-md shadow-sm">
-                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <i class="fas fa-tag text-gray-400"></i>
-                  </div>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    class="pl-10 appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-amber-500 focus:border-amber-500 sm:text-sm"
-                    placeholder="Ingrese el nombre de la categoría"
+                <div class="mt-1">
+                  <input type="text" name="name" id="name" required
+                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                     value="<%= name %>"
-                    required
-                  />
+                  >
                 </div>
               </div>
 
+              <!-- State Field -->
               <div>
                 <label for="state" class="block text-sm font-medium text-gray-700">
                   Estado
                 </label>
-                <div class="mt-1 relative rounded-md shadow-sm">
-                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <i class="fas fa-toggle-on text-gray-400"></i>
-                  </div>
-                  <select
-                    id="state"
-                    name="state"
-                    class="pl-10 appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-amber-500 focus:border-amber-500 sm:text-sm"
-                    required
-                  >
-                    <option value="">Seleccione un estado</option>
-                    <option value="activo" <%= state == 'activo' ? 'selected' : '' %>>Activo</option>
-                    <option value="inactivo" <%= state == 'inactivo' ? 'selected' : '' %>>Inactivo</option>
+                <div class="mt-1">
+                  <select name="state" id="state"
+                    class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-md">
+                    <option value="activo" <%= state === 'activo' ? 'selected' : '' %>>Activo</option>
+                    <option value="inactivo" <%= state === 'inactivo' ? 'selected' : '' %>>Inactivo</option>
                   </select>
                 </div>
               </div>
 
-              <div class="flex space-x-4">
-                <a
-                  href="/categories"
-                  class="flex-1 py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 text-center"
-                >
+              <!-- Submit Button -->
+              <div class="flex items-center justify-between space-x-3">
+                <a href="/categories"
+                  class="flex-1 bg-gray-100 py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 text-center">
                   Cancelar
                 </a>
-                <button
-                  type="submit"
-                  class="flex-1 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-amber-600 hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500"
-                >
-                  Actualizar
+                <button type="submit"
+                  class="flex-1 bg-indigo-600 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                  Actualizar Categoría
                 </button>
               </div>
             </form>
           </div>
         </div>
       </div>
-    </div>
-  </body>
-</html>
-                  >
-                    <i class="fas fa-save mr-2"></i>
-                    Guardar Cambios
-                  </button>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-
-      <footer class="bg-white border-t border-gray-200 mt-auto">
-        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-          <p class="text-center text-sm text-gray-500">© <%= new Date().getFullYear() %> Sistema de Gestión de Biblioteca</p>
-        </div>
-      </footer>
     </div>
   </body>
 </html>

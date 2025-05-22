@@ -45,184 +45,283 @@
         <div
           class="bg-white shadow rounded-xl overflow-hidden border border-gray-100"
         >
-          <div>
-            <div
-              class="px-6 py-4 bg-gradient-to-r from-indigo-700 to-indigo-600"
-            >
+          <!-- Encabezado -->
+          <div class="px-6 py-4 bg-gradient-to-r from-indigo-700 to-indigo-600">
+            <div class="flex justify-between items-center">
               <h2 class="text-xl font-semibold text-white">
                 Catálogo de Editoriales
               </h2>
-            </div>
-
-            <% if(data.length) { %>
-            <div class="overflow-x-auto">
-              <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
-                  <tr>
-                    <th
-                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
-                      #
-                    </th>
-                    <th
-                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
-                      Nombre
-                    </th>
-                    <th
-                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
-                      Contacto
-                    </th>
-                    <th
-                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
-                      Estado
-                    </th>
-                    <th
-                      class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
-                      Acciones
-                    </th>
-                  </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                  <% data.forEach((publisher, index) => { %>
-                  <tr
-                    class="hover:bg-amber-50 transition-colors duration-150 ease-in-out"
-                  >
-                    <td
-                      class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
-                    >
-                      <%= index + 1 %>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      <div class="flex flex-col">
-                        <div class="text-sm font-medium text-gray-900">
-                          <%= publisher.name %>
-                        </div>
-                        <% if (publisher.website) { %>
-                        <a
-                          href="<%= publisher.website %>"
-                          target="_blank"
-                          class="text-xs text-amber-600 hover:text-amber-900"
-                        >
-                          <i class="fas fa-external-link-alt mr-1"></i>Sitio web
-                        </a>
-                        <% } %>
-                      </div>
-                    </td>
-                    <td class="px-6 py-4">
-                      <div class="flex flex-col">
-                        <% if (publisher.contact_info || publisher.email ||
-                        publisher.address) { %>
-                        <div class="flex flex-col gap-1">
-                          <% if (publisher.contact_info) { %>
-                          <div class="text-sm text-gray-900">
-                            <i
-                              class="fas fa-address-card text-gray-400 mr-1"
-                            ></i>
-                            <%= publisher.contact_info %>
-                          </div>
-                          <% } %> <% if (publisher.email) { %>
-                          <div class="text-xs">
-                            <a
-                              href="mailto:<%= publisher.email %>"
-                              class="text-amber-600 hover:text-amber-900"
-                            >
-                              <i class="fas fa-envelope mr-1"></i><%=
-                              publisher.email %>
-                            </a>
-                          </div>
-                          <% } %> <% if (publisher.address) { %>
-                          <div class="text-xs text-gray-500">
-                            <i class="fas fa-map-marker-alt mr-1"></i><%=
-                            publisher.address %>
-                          </div>
-                          <% } %> <% if (publisher.book_count > 0) { %>
-                          <div class="text-xs text-gray-500">
-                            <i class="fas fa-book mr-1"></i><%=
-                            publisher.book_count %> libro<%=
-                            publisher.book_count === 1 ? '' : 's' %>
-                          </div>
-                          <% } %>
-                        </div>
-                        <% } else { %>
-                        <span class="text-sm text-gray-500"
-                          >Sin información de contacto</span
-                        >
-                        <% } %>
-                      </div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      <span
-                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%= publisher.state === 'activo' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' %>"
-                      >
-                        <%= publisher.state %>
-                      </span>
-                    </td>
-                    <td
-                      class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2"
-                    >
-                      <a
-                        href="/publishers/edit/<%= publisher.id %>"
-                        class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-amber-700 bg-amber-100 hover:bg-amber-200 transition-colors duration-150"
-                      >
-                        <i class="fas fa-edit mr-1"></i> Editar
-                      </a>
-                      <a
-                        href="/publishers/delete/<%= publisher.id %>"
-                        onclick="return confirm('¿Está seguro de que desea eliminar esta editorial?');"
-                        class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-red-700 bg-red-100 hover:bg-red-200 transition-colors duration-150"
-                      >
-                        <i class="fas fa-trash-alt mr-1"></i> Eliminar
-                      </a>
-                    </td>
-                  </tr>
-                  <% }) %>
-                </tbody>
-              </table>
-            </div>
-            <% } else { %>
-            <div class="text-center py-16">
-              <div
-                class="mx-auto h-24 w-24 text-indigo-700 bg-indigo-200 rounded-full flex items-center justify-center"
-              >
-                <i class="fas fa-building text-4xl"></i>
-              </div>
-              <h3 class="mt-4 text-lg font-medium text-gray-900">
-                No hay editoriales registradas
-              </h3>
-              <p class="mt-2 text-base text-gray-500">
-                Comienza agregando una nueva editorial.
-              </p>
-              <div class="mt-6">
-                <a
-                  href="/publishers/add"
-                  class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-700 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                >
-                  <i class="fas fa-plus mr-2"></i>
-                  Agregar mi primera editorial
-                </a>
-              </div>
-            </div>
-            <% } %> <% if(data.length) { %>
-            <div class="px-6 py-4 border-t border-gray-200">
               <a
                 href="/publishers/add"
-                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-amber-600 hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500"
+                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
                 <i class="fas fa-plus mr-2"></i>
-                Nueva Editorial
+                Agregar Editorial
               </a>
             </div>
-            <% } %>
           </div>
+
+          <!-- Filtros -->
+          <div class="p-4 border-b border-gray-200 bg-gray-50">
+            <form action="/publishers" method="GET" class="space-y-4">
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="relative">
+                  <input
+                    type="text"
+                    name="search"
+                    value="<%= filters.search || '' %>"
+                    placeholder="Buscar por nombre, contacto o email..."
+                    class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                  />
+                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <i class="fas fa-search text-gray-400"></i>
+                  </div>
+                </div>
+
+                <div>
+                  <select
+                    name="state"
+                    class="w-full border border-gray-300 rounded-md py-2 pl-3 pr-10 focus:ring-indigo-500 focus:border-indigo-500"
+                  >
+                    <option value="">Todos los estados</option>
+                    <option value="activo" <%= filters.state === 'activo' ? 'selected' : '' %>>Activo</option>
+                    <option value="inactivo" <%= filters.state === 'inactivo' ? 'selected' : '' %>>Inactivo</option>
+                  </select>
+                </div>
+
+                <div class="flex space-x-2">
+                  <button
+                    type="submit"
+                    class="flex-1 bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  >
+                    <i class="fas fa-filter mr-2"></i>
+                    Filtrar
+                  </button>
+                  <a
+                    href="/publishers"
+                    class="flex-1 bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 text-center"
+                  >
+                    <i class="fas fa-undo mr-2"></i>
+                    Limpiar
+                  </a>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <% if(data.length) { %>
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <a href="/publishers?<%= new URLSearchParams({...filters, orderBy: 'p.id', order: filters.order === 'asc' ? 'desc' : 'asc'}) %>" class="flex items-center space-x-1 hover:text-gray-700">
+                      <span>#</span>
+                      <% if(filters.orderBy === 'p.id') { %>
+                        <i class="fas fa-sort-<%= filters.order === 'asc' ? 'up' : 'down' %> ml-1"></i>
+                      <% } %>
+                    </a>
+                  </th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <a href="/publishers?<%= new URLSearchParams({...filters, orderBy: 'p.name', order: filters.order === 'asc' ? 'desc' : 'asc'}) %>" class="flex items-center space-x-1 hover:text-gray-700">
+                      <span>Nombre</span>
+                      <% if(filters.orderBy === 'p.name') { %>
+                        <i class="fas fa-sort-<%= filters.order === 'asc' ? 'up' : 'down' %> ml-1"></i>
+                      <% } %>
+                    </a>
+                  </th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Contacto
+                  </th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <a href="/publishers?<%= new URLSearchParams({...filters, orderBy: 'p.state', order: filters.order === 'asc' ? 'desc' : 'asc'}) %>" class="flex items-center space-x-1 hover:text-gray-700">
+                      <span>Estado</span>
+                      <% if(filters.orderBy === 'p.state') { %>
+                        <i class="fas fa-sort-<%= filters.order === 'asc' ? 'up' : 'down' %> ml-1"></i>
+                      <% } %>
+                    </a>
+                  </th>
+                  <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Acciones
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <% data.forEach((publisher, index) => { %>
+                <tr class="hover:bg-indigo-50 transition-colors duration-150 ease-in-out">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <%= ((pagination.current - 1) * pagination.limit) + index + 1 %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="flex flex-col">
+                      <div class="text-sm font-medium text-gray-900">
+                        <%= publisher.name %>
+                      </div>
+                      <% if (publisher.website) { %>
+                        <a href="<%= publisher.website %>" target="_blank" class="text-xs text-indigo-600 hover:text-indigo-900">
+                          <i class="fas fa-external-link-alt mr-1"></i>Sitio web
+                        </a>
+                      <% } %>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="flex flex-col text-sm text-gray-600">
+                      <% if (publisher.contact_info) { %>
+                        <span><i class="fas fa-user mr-1"></i><%= publisher.contact_info %></span>
+                      <% } %>
+                      <% if (publisher.email) { %>
+                        <span><i class="fas fa-envelope mr-1"></i><%= publisher.email %></span>
+                      <% } %>
+                      <% if (publisher.address) { %>
+                        <span><i class="fas fa-map-marker-alt mr-1"></i><%= publisher.address %></span>
+                      <% } %>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%= publisher.state === 'activo' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' %>">
+                      <%= publisher.state %>
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                    <a
+                      href="/publishers/edit/<%= publisher.id %>"
+                      class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-amber-700 bg-amber-100 hover:bg-amber-200 transition-colors duration-150"
+                    >
+                      <i class="fas fa-edit mr-1"></i> Editar
+                    </a>
+                    <a
+                      href="/publishers/delete/<%= publisher.id %>"
+                      onclick="return confirm('¿Está seguro de que desea eliminar esta editorial?');"
+                      class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-red-700 bg-red-100 hover:bg-red-200 transition-colors duration-150"
+                    >
+                      <i class="fas fa-trash-alt mr-1"></i> Eliminar
+                    </a>
+                  </td>
+                </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+
+          <% if (pagination.total > 1) { %>
+          <div class="px-6 py-4 bg-gray-50 border-t border-gray-200">
+            <div class="flex items-center justify-between">
+              <div class="flex-1 flex justify-between sm:hidden">
+                <% if (pagination.current > 1) { %>
+                <a
+                  href="/publishers?<%= new URLSearchParams({...filters, page: pagination.current - 1}) %>"
+                  class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                >
+                  Anterior
+                </a>
+                <% } %>
+                <% if (pagination.current < pagination.total) { %>
+                <a
+                  href="/publishers?<%= new URLSearchParams({...filters, page: pagination.current + 1}) %>"
+                  class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                >
+                  Siguiente
+                </a>
+                <% } %>
+              </div>
+              <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                <div>
+                  <p class="text-sm text-gray-700">
+                    Mostrando
+                    <span class="font-medium"><%= ((pagination.current - 1) * pagination.limit) + 1 %></span>
+                    a
+                    <span class="font-medium"><%= Math.min(pagination.current * pagination.limit, pagination.totalItems) %></span>
+                    de
+                    <span class="font-medium"><%= pagination.totalItems %></span>
+                    resultados
+                  </p>
+                </div>
+                <div>
+                  <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                    <% if (pagination.current > 1) { %>
+                    <a
+                      href="/publishers?<%= new URLSearchParams({...filters, page: pagination.current - 1}) %>"
+                      class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                    >
+                      <span class="sr-only">Anterior</span>
+                      <i class="fas fa-chevron-left"></i>
+                    </a>
+                    <% } %>
+
+                    <% for(let i = 1; i <= pagination.total; i++) { %>
+                    <% if (
+                      i === 1 ||
+                      i === pagination.total ||
+                      (i >= pagination.current - 2 && i <= pagination.current + 2)
+                    ) { %>
+                    <a
+                      href="/publishers?<%= new URLSearchParams({...filters, page: i}) %>"
+                      class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium <%= pagination.current === i ? 'text-indigo-600 bg-indigo-50 border-indigo-500 z-10' : 'text-gray-500 hover:bg-gray-50' %>"
+                    >
+                      <%= i %>
+                    </a>
+                    <% } else if (
+                      i === pagination.current - 3 ||
+                      i === pagination.current + 3
+                    ) { %>
+                    <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
+                      ...
+                    </span>
+                    <% } %>
+                    <% } %>
+
+                    <% if (pagination.current < pagination.total) { %>
+                    <a
+                      href="/publishers?<%= new URLSearchParams({...filters, page: pagination.current + 1}) %>"
+                      class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                    >
+                      <span class="sr-only">Siguiente</span>
+                      <i class="fas fa-chevron-right"></i>
+                    </a>
+                    <% } %>
+                  </nav>
+                </div>
+              </div>
+            </div>
+          </div>
+          <% } %>
+
+          <div class="px-6 py-4 border-t border-gray-200">
+            <a
+              href="/publishers/add"
+              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              <i class="fas fa-plus mr-2"></i>
+              Nueva Editorial
+            </a>
+          </div>
+          <% } else { %>
+          <div class="text-center py-16">
+            <div class="mx-auto h-24 w-24 text-indigo-300 bg-indigo-100 rounded-full flex items-center justify-center">
+              <i class="fas fa-building text-4xl"></i>
+            </div>
+            <h3 class="mt-4 text-lg font-medium text-gray-900">
+              No hay editoriales registradas
+            </h3>
+            <p class="mt-2 text-base text-gray-500">
+              Comienza agregando una nueva editorial a tu biblioteca.
+            </p>
+            <div class="mt-6">
+              <a
+                href="/publishers/add"
+                class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                <i class="fas fa-plus mr-2"></i>
+                Agregar mi primera editorial
+              </a>
+            </div>
+          </div>
+          <% } %>
         </div>
       </div>
 
-      <footer class="bg-white border-t border-gray-200 mt-auto">
-        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+      <footer class="bg-white border-t border-gray-200 py-4">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <p class="text-center text-sm text-gray-500">
             © <%= new Date().getFullYear() %> Sistema de Gestión de Biblioteca
           </p>

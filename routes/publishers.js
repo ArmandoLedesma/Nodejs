@@ -4,34 +4,94 @@ var dbConn = require("../lib/db");
 
 // Listar editoriales
 router.get("/", function (req, res, next) {
-  dbConn.query(
-    `SELECT 
+  const page = parseInt(req.query.page) || 1;
+  const limit = 10; // editoriales por página
+  const offset = (page - 1) * limit;
+
+  // Construir la consulta base
+  let baseQuery = `FROM publishers p
+    LEFT JOIN books b ON p.id = b.publisher_id
+    WHERE 1=1`;
+  let params = [];
+
+  // Aplicar filtros si existen
+  if (req.query.search) {
+    baseQuery +=
+      " AND (p.name LIKE ? OR p.contact_info LIKE ? OR p.email LIKE ?)";
+    const searchTerm = `%${req.query.search}%`;
+    params.push(searchTerm, searchTerm, searchTerm);
+  }
+
+  if (req.query.state) {
+    baseQuery += " AND p.state = ?";
+    params.push(req.query.state);
+  }
+
+  // Agrupar resultados
+  baseQuery += " GROUP BY p.id";
+
+  // Orden
+  const orderBy = req.query.orderBy || "p.name";
+  const order = req.query.order === "asc" ? "ASC" : "DESC";
+  baseQuery += ` ORDER BY ${orderBy} ${order}`;
+
+  // Consultas
+  const countQuery = `SELECT COUNT(*) as total FROM (SELECT p.id ${baseQuery}) as subquery`;
+  const mainQuery = `
+    SELECT 
       p.*,
       COUNT(b.id) as book_count
-    FROM publishers p
-    LEFT JOIN books b ON p.id = b.publisher_id
-    GROUP BY p.id
-    ORDER BY p.name ASC`,
-    function (err, rows) {
+    ${baseQuery}
+    LIMIT ? OFFSET ?
+  `;
+
+  // Ejecutar consulta de conteo
+  dbConn.query(countQuery, params, function (err, countResult) {
+    if (err) {
+      req.flash("error", err);
+      res.render("publishers/index", {
+        title: "Gestión de Editoriales",
+        data: "",
+        pagination: {},
+        filters: req.query,
+      });
+      return;
+    }
+
+    const totalItems = countResult[0].total;
+    const totalPages = Math.ceil(totalItems / limit);
+
+    // Ejecutar consulta principal
+    dbConn.query(mainQuery, [...params, limit, offset], function (err, rows) {
       if (err) {
         req.flash("error", err);
         res.render("publishers/index", {
           title: "Gestión de Editoriales",
           data: "",
+          pagination: {},
+          filters: req.query,
         });
       } else {
         res.render("publishers/index", {
           title: "Gestión de Editoriales",
           data: rows,
+          pagination: {
+            current: page,
+            total: totalPages,
+            limit: limit,
+            totalItems: totalItems,
+          },
+          filters: req.query,
         });
       }
-    }
-  );
+    });
+  });
 });
 
 // Mostrar formulario de agregar editorial
 router.get("/add", function (req, res, next) {
   res.render("publishers/add", {
+    title: "Agregar Editorial",
     name: "",
     contact_info: "",
     address: "",
@@ -48,12 +108,14 @@ router.post("/add", function (req, res, next) {
   let address = req.body.address;
   let website = req.body.website;
   let email = req.body.email;
+  let state = req.body.state || "activo";
   let errors = false;
 
   if (name.length === 0) {
     errors = true;
     req.flash("error", "Por favor ingrese el nombre de la editorial");
     res.render("publishers/add", {
+      title: "Agregar Editorial",
       name: name,
       contact_info: contact_info,
       address: address,
@@ -68,6 +130,7 @@ router.post("/add", function (req, res, next) {
     errors = true;
     req.flash("error", "Por favor ingrese un correo electrónico válido");
     res.render("publishers/add", {
+      title: "Agregar Editorial",
       name: name,
       contact_info: contact_info,
       address: address,
@@ -82,6 +145,7 @@ router.post("/add", function (req, res, next) {
     errors = true;
     req.flash("error", "Por favor ingrese una URL válida");
     res.render("publishers/add", {
+      title: "Agregar Editorial",
       name: name,
       contact_info: contact_info,
       address: address,
@@ -98,7 +162,7 @@ router.post("/add", function (req, res, next) {
       address: address || null,
       website: website || null,
       email: email || null,
-      state: "activo",
+      state: state,
     };
 
     dbConn.query(
@@ -131,6 +195,7 @@ router.get("/edit/:id", function (req, res, next) {
         res.redirect("/publishers");
       } else {
         res.render("publishers/edit", {
+          title: "Editar Editorial",
           id: rows[0].id,
           name: rows[0].name,
           contact_info: rows[0].contact_info,
@@ -159,6 +224,7 @@ router.post("/update/:id", function (req, res, next) {
     errors = true;
     req.flash("error", "Por favor ingrese el nombre de la editorial");
     res.render("publishers/edit", {
+      title: "Editar Editorial",
       id: id,
       name: name,
       contact_info: contact_info,
