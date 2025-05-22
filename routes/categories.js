@@ -4,28 +4,82 @@ var dbConn = require("../lib/db");
 
 // Listar categorías
 router.get("/", function (req, res, next) {
-  dbConn.query(
-    "SELECT * FROM categories ORDER BY id desc",
-    function (err, rows) {
+  const page = parseInt(req.query.page) || 1;
+  const limit = 10; // categorías por página
+  const offset = (page - 1) * limit;
+
+  // Construir la consulta base
+  let baseQuery = "FROM categories WHERE 1=1";
+  let params = [];
+
+  // Aplicar filtros si existen
+  if (req.query.search) {
+    baseQuery += " AND name LIKE ?";
+    const searchTerm = `%${req.query.search}%`;
+    params.push(searchTerm);
+  }
+
+  if (req.query.state) {
+    baseQuery += " AND state = ?";
+    params.push(req.query.state);
+  }
+
+  // Orden
+  const orderBy = req.query.orderBy || "name";
+  const order = req.query.order === "asc" ? "ASC" : "DESC";
+  baseQuery += ` ORDER BY ${orderBy} ${order}`;
+
+  // Consultas
+  const countQuery = `SELECT COUNT(*) as total ${baseQuery}`;
+  const mainQuery = `SELECT * ${baseQuery} LIMIT ? OFFSET ?`;
+
+  // Ejecutar consulta de conteo
+  dbConn.query(countQuery, params, function (err, countResult) {
+    if (err) {
+      req.flash("error", err);
+      res.render("categories/index", {
+        title: "Gestión de Categorías",
+        data: "",
+        pagination: {},
+        filters: req.query,
+      });
+      return;
+    }
+
+    const totalItems = countResult[0].total;
+    const totalPages = Math.ceil(totalItems / limit);
+
+    // Ejecutar consulta principal
+    dbConn.query(mainQuery, [...params, limit, offset], function (err, rows) {
       if (err) {
         req.flash("error", err);
         res.render("categories/index", {
           title: "Gestión de Categorías",
           data: "",
+          pagination: {},
+          filters: req.query,
         });
       } else {
         res.render("categories/index", {
           title: "Gestión de Categorías",
           data: rows,
+          pagination: {
+            current: page,
+            total: totalPages,
+            limit: limit,
+            totalItems: totalItems,
+          },
+          filters: req.query,
         });
       }
-    }
-  );
+    });
+  });
 });
 
 // Mostrar formulario de agregar categoría
 router.get("/add", function (req, res, next) {
   res.render("categories/add", {
+    title: "Agregar Categoría",
     name: "",
     state: "activo", // Estado por defecto
   });
@@ -37,10 +91,11 @@ router.post("/add", function (req, res, next) {
   let state = req.body.state || "activo";
   let errors = false;
 
-  if (name.length === 0) {
+  if (name.length === 0 || name.trim() === "") {
     errors = true;
     req.flash("error", "Por favor ingrese el nombre de la categoría");
     res.render("categories/add", {
+      title: "Agregar Categoría",
       name: name,
       state: state,
     });

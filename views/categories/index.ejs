@@ -6,7 +6,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
-    <title>Gestión de Biblioteca</title>
+    <title>Gestión de Categorías - Biblioteca</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link
       rel="stylesheet"
@@ -45,122 +45,262 @@
         <div
           class="bg-white shadow rounded-xl overflow-hidden border border-gray-100"
         >
-          <div>
-            <div
-              class="px-6 py-4 bg-gradient-to-r from-indigo-700 to-indigo-600"
-            >
+          <!-- Encabezado -->
+          <div class="px-6 py-4 bg-gradient-to-r from-indigo-700 to-indigo-600">
+            <div class="flex justify-between items-center">
               <h2 class="text-xl font-semibold text-white">
-                Catálogo de categorías
+                Catálogo de Categorías
               </h2>
-            </div>
-
-            <% if(data.length) { %>
-            <div class="overflow-x-auto">
-              <table class="min-w-full divide-y divide-gray-200">
-                <thead>
-                  <tr class="bg-gray-50">
-                    <th
-                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
-                      #
-                    </th>
-                    <th
-                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
-                      Nombre
-                    </th>
-                    <th
-                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
-                      Estado
-                    </th>
-                    <th
-                      class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
-                      Acciones
-                    </th>
-                  </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                  <% data.forEach((category, index) => { %>
-                  <tr class="hover:bg-gray-50 transition-colors duration-200">
-                    <td
-                      class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
-                    >
-                      <%= index + 1 %>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      <div class="text-sm font-medium text-gray-900">
-                        <%= category.name %>
-                      </div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      <% if(category.state === 'activo') { %>
-                      <span
-                        class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800"
-                      >
-                        Activo
-                      </span>
-                      <% } else { %>
-                      <span
-                        class="px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-800"
-                      >
-                        Inactivo
-                      </span>
-                      <% } %>
-                    </td>
-                    <td
-                      class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2"
-                    >
-                      <a
-                        href="/categories/edit/<%= category.id %>"
-                        class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-amber-700 bg-amber-100 hover:bg-amber-200 transition-colors duration-150"
-                      >
-                        <i class="fas fa-edit mr-1"></i> Editar
-                      </a>
-                      <a
-                        href="/categories/delete/<%= category.id %>"
-                        onclick="return confirm('¿Estás seguro de eliminar esta categoría?');"
-                        class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-red-700 bg-red-100 hover:bg-red-200 transition-colors duration-150"
-                      >
-                        <i class="fas fa-trash-alt mr-1"></i> Eliminar
-                      </a>
-                    </td>
-                  </tr>
-                  <% }); %>
-                </tbody>
-              </table>
-            </div>
-            <% } else { %>
-            <div class="text-center py-16">
-              <div
-                class="mx-auto h-24 w-24 text-indigo-300 bg-indigo-100 rounded-full flex items-center justify-center"
+              <a
+                href="/categories/add"
+                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
-                <i class="fas fa-tag text-4xl"></i>
+                <i class="fas fa-plus mr-2"></i>
+                Agregar Categoría
+              </a>
+            </div>
+          </div>
+
+          <!-- Filtros -->
+          <div class="p-4 border-b border-gray-200 bg-gray-50">
+            <form action="/categories" method="GET" class="space-y-4">
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="relative">
+                  <input
+                    type="text"
+                    name="search"
+                    value="<%= filters.search || '' %>"
+                    placeholder="Buscar por nombre..."
+                    class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                  />
+                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <i class="fas fa-search text-gray-400"></i>
+                  </div>
+                </div>
+
+                <div>
+                  <select
+                    name="state"
+                    class="w-full border border-gray-300 rounded-md py-2 pl-3 pr-10 focus:ring-indigo-500 focus:border-indigo-500"
+                  >
+                    <option value="">Todos los estados</option>
+                    <option value="activo" <%= filters.state === 'activo' ? 'selected' : '' %>>Activo</option>
+                    <option value="inactivo" <%= filters.state === 'inactivo' ? 'selected' : '' %>>Inactivo</option>
+                  </select>
+                </div>
+
+                <div class="flex space-x-2">
+                  <button
+                    type="submit"
+                    class="flex-1 bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  >
+                    <i class="fas fa-filter mr-2"></i>
+                    Filtrar
+                  </button>
+                  <a
+                    href="/categories"
+                    class="flex-1 bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 text-center"
+                  >
+                    <i class="fas fa-undo mr-2"></i>
+                    Limpiar
+                  </a>
+                </div>
               </div>
-              <h3 class="mt-4 text-lg font-medium text-gray-900">
-                No hay categorías registradas
-              </h3>
-              <p class="mt-2 text-base text-gray-500">
-                Comienza agregando una nueva categoría.
-              </p>
-              <div class="mt-6">
+            </form>
+          </div>
+
+          <% if(data.length) { %>
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <a href="/categories?<%= new URLSearchParams({...filters, orderBy: 'id', order: filters.order === 'asc' ? 'desc' : 'asc'}) %>" class="flex items-center space-x-1 hover:text-gray-700">
+                      <span>#</span>
+                      <% if(filters.orderBy === 'id') { %>
+                        <i class="fas fa-sort-<%= filters.order === 'asc' ? 'up' : 'down' %> ml-1"></i>
+                      <% } %>
+                    </a>
+                  </th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <a href="/categories?<%= new URLSearchParams({...filters, orderBy: 'name', order: filters.order === 'asc' ? 'desc' : 'asc'}) %>" class="flex items-center space-x-1 hover:text-gray-700">
+                      <span>Nombre</span>
+                      <% if(filters.orderBy === 'name') { %>
+                        <i class="fas fa-sort-<%= filters.order === 'asc' ? 'up' : 'down' %> ml-1"></i>
+                      <% } %>
+                    </a>
+                  </th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <a href="/categories?<%= new URLSearchParams({...filters, orderBy: 'state', order: filters.order === 'asc' ? 'desc' : 'asc'}) %>" class="flex items-center space-x-1 hover:text-gray-700">
+                      <span>Estado</span>
+                      <% if(filters.orderBy === 'state') { %>
+                        <i class="fas fa-sort-<%= filters.order === 'asc' ? 'up' : 'down' %> ml-1"></i>
+                      <% } %>
+                    </a>
+                  </th>
+                  <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Acciones
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <% data.forEach((category, index) => { %>
+                <tr class="hover:bg-indigo-50 transition-colors duration-150 ease-in-out">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <%= ((pagination.current - 1) * pagination.limit) + index + 1 %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm font-medium text-gray-900">
+                      <%= category.name %>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%= category.state === 'activo' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' %>">
+                      <%= category.state %>
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                    <a
+                      href="/categories/edit/<%= category.id %>"
+                      class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-amber-700 bg-amber-100 hover:bg-amber-200 transition-colors duration-150"
+                    >
+                      <i class="fas fa-edit mr-1"></i> Editar
+                    </a>
+                    <a
+                      href="/categories/delete/<%= category.id %>"
+                      onclick="return confirm('¿Está seguro de que desea eliminar esta categoría?');"
+                      class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-red-700 bg-red-100 hover:bg-red-200 transition-colors duration-150"
+                    >
+                      <i class="fas fa-trash-alt mr-1"></i> Eliminar
+                    </a>
+                  </td>
+                </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+
+          <% if (pagination.total > 1) { %>
+          <div class="px-6 py-4 bg-gray-50 border-t border-gray-200">
+            <div class="flex items-center justify-between">
+              <div class="flex-1 flex justify-between sm:hidden">
+                <% if (pagination.current > 1) { %>
                 <a
-                  href="/categories/add"
-                  class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  href="/categories?<%= new URLSearchParams({...filters, page: pagination.current - 1}) %>"
+                  class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
                 >
-                  <i class="fas fa-plus mr-2"></i>
-                  Agregar mi primera categoría
+                  Anterior
                 </a>
+                <% } %>
+                <% if (pagination.current < pagination.total) { %>
+                <a
+                  href="/categories?<%= new URLSearchParams({...filters, page: pagination.current + 1}) %>"
+                  class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                >
+                  Siguiente
+                </a>
+                <% } %>
+              </div>
+              <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                <div>
+                  <p class="text-sm text-gray-700">
+                    Mostrando
+                    <span class="font-medium"><%= ((pagination.current - 1) * pagination.limit) + 1 %></span>
+                    a
+                    <span class="font-medium"><%= Math.min(pagination.current * pagination.limit, pagination.totalItems) %></span>
+                    de
+                    <span class="font-medium"><%= pagination.totalItems %></span>
+                    resultados
+                  </p>
+                </div>
+                <div>
+                  <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                    <% if (pagination.current > 1) { %>
+                    <a
+                      href="/categories?<%= new URLSearchParams({...filters, page: pagination.current - 1}) %>"
+                      class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                    >
+                      <span class="sr-only">Anterior</span>
+                      <i class="fas fa-chevron-left"></i>
+                    </a>
+                    <% } %>
+
+                    <% for(let i = 1; i <= pagination.total; i++) { %>
+                    <% if (
+                      i === 1 ||
+                      i === pagination.total ||
+                      (i >= pagination.current - 2 && i <= pagination.current + 2)
+                    ) { %>
+                    <a
+                      href="/categories?<%= new URLSearchParams({...filters, page: i}) %>"
+                      class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium <%= pagination.current === i ? 'text-indigo-600 bg-indigo-50 border-indigo-500 z-10' : 'text-gray-500 hover:bg-gray-50' %>"
+                    >
+                      <%= i %>
+                    </a>
+                    <% } else if (
+                      i === pagination.current - 3 ||
+                      i === pagination.current + 3
+                    ) { %>
+                    <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
+                      ...
+                    </span>
+                    <% } %>
+                    <% } %>
+
+                    <% if (pagination.current < pagination.total) { %>
+                    <a
+                      href="/categories?<%= new URLSearchParams({...filters, page: pagination.current + 1}) %>"
+                      class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                    >
+                      <span class="sr-only">Siguiente</span>
+                      <i class="fas fa-chevron-right"></i>
+                    </a>
+                    <% } %>
+                  </nav>
+                </div>
               </div>
             </div>
-            <% } %>
           </div>
+          <% } %>
+
+          <div class="px-6 py-4 border-t border-gray-200">
+            <a
+              href="/categories/add"
+              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              <i class="fas fa-plus mr-2"></i>
+              Nueva Categoría
+            </a>
+          </div>
+          <% } else { %>
+          <div class="text-center py-16">
+            <div
+              class="mx-auto h-24 w-24 text-indigo-300 bg-indigo-100 rounded-full flex items-center justify-center"
+            >
+              <i class="fas fa-tag text-4xl"></i>
+            </div>
+            <h3 class="mt-4 text-lg font-medium text-gray-900">
+              No hay categorías registradas
+            </h3>
+            <p class="mt-2 text-base text-gray-500">
+              Comienza agregando una nueva categoría a tu biblioteca.
+            </p>
+            <div class="mt-6">
+              <a
+                href="/categories/add"
+                class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                <i class="fas fa-plus mr-2"></i>
+                Agregar mi primera categoría
+              </a>
+            </div>
+          </div>
+          <% } %>
         </div>
       </div>
 
-      <footer class="bg-white border-t border-gray-200 mt-auto">
-        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+      <footer class="bg-white border-t border-gray-200 py-4">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <p class="text-center text-sm text-gray-500">
             © <%= new Date().getFullYear() %> Sistema de Gestión de Biblioteca
           </p>
