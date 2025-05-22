@@ -95,66 +95,6 @@
         </div>
       </div>
 
-      <!-- Sidebar desktop -->
-      <div class="hidden lg:flex lg:flex-shrink-0">
-        <div class="w-64 bg-indigo-700 text-white">
-          <div class="p-4">
-            <a href="/" class="flex items-center space-x-2 mb-8">
-              <i class="fas fa-book-open text-2xl text-indigo-200"></i>
-              <h1 class="text-2xl font-bold">BiblioTech</h1>
-            </a>
-            <nav class="space-y-4">
-              <a
-                href="/"
-                class="flex items-center space-x-3 p-3 rounded-lg hover:bg-indigo-600 transition-colors group"
-              >
-                <i
-                  class="fas fa-home text-indigo-300 group-hover:text-white"
-                ></i>
-                <span>Panel de Control</span>
-              </a>
-              <div class="border-t border-indigo-600 my-2"></div>
-              <a
-                href="/books"
-                class="flex items-center space-x-3 p-3 rounded-lg hover:bg-indigo-600 transition-colors group"
-              >
-                <i
-                  class="fas fa-book text-indigo-300 group-hover:text-white"
-                ></i>
-                <span>Libros</span>
-              </a>
-              <a
-                href="/authors"
-                class="flex items-center space-x-3 p-3 rounded-lg hover:bg-indigo-600 transition-colors group"
-              >
-                <i
-                  class="fas fa-user-edit text-indigo-300 group-hover:text-white"
-                ></i>
-                <span>Autores</span>
-              </a>
-              <a
-                href="/categories"
-                class="flex items-center space-x-3 p-3 rounded-lg hover:bg-indigo-600 transition-colors group"
-              >
-                <i
-                  class="fas fa-tags text-indigo-300 group-hover:text-white"
-                ></i>
-                <span>Categorías</span>
-              </a>
-              <a
-                href="/publishers"
-                class="flex items-center space-x-3 p-3 rounded-lg hover:bg-indigo-600 transition-colors group"
-              >
-                <i
-                  class="fas fa-building text-indigo-300 group-hover:text-white"
-                ></i>
-                <span>Editoriales</span>
-              </a>
-            </nav>
-          </div>
-        </div>
-      </div>
-
       <!-- Contenido Principal -->
       <div class="flex-1 flex flex-col overflow-hidden">
         <!-- Top bar -->
@@ -175,265 +115,279 @@
         </header>
 
         <!-- Área de contenido principal -->
-        <main class="flex-1 overflow-y-auto p-6">
-          <!-- Accesos Rápidos -->
-          <div
-            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
-            data-aos="fade-up"
-          >
-            <!-- Acceso a Libros -->
-            <div
-              class="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow"
-            >
-              <div class="flex items-center justify-between mb-4">
-                <div
-                  class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center"
-                >
-                  <i class="fas fa-book text-xl text-indigo-600"></i>
-                </div>
-                <a
-                  href="/books/add"
-                  class="text-indigo-600 hover:text-indigo-700"
-                >
-                  <i class="fas fa-plus"></i>
-                </a>
-              </div>
-              <h3 class="text-lg font-semibold text-gray-800">
-                Gestionar Libros
-              </h3>
-              <p class="text-sm text-gray-500 mt-1">
-                Administra el catálogo de libros
+        <main class="flex-1 overflow-y-auto">
+          <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+            <!-- Panel de Control -->
+            <div class="mb-8">
+              <h1 class="text-2xl font-bold text-gray-900">Panel de Control</h1>
+              <p class="mt-1 text-sm text-gray-500">
+                Bienvenido al sistema de gestión biblioteca
               </p>
-              <a
-                href="/books"
-                class="mt-4 text-indigo-600 hover:text-indigo-700 text-sm flex items-center"
-              >
-                Ir a libros <i class="fas fa-arrow-right ml-1"></i>
-              </a>
             </div>
 
-            <!-- Acceso a Autores -->
+            <!-- Accesos Rápidos -->
             <div
-              class="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow"
-            >
-              <div class="flex items-center justify-between mb-4">
-                <div
-                  class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center"
-                >
-                  <i class="fas fa-user-edit text-xl text-green-600"></i>
-                </div>
-                <a
-                  href="/authors/add"
-                  class="text-green-600 hover:text-green-700"
-                >
-                  <i class="fas fa-plus"></i>
-                </a>
-              </div>
-              <h3 class="text-lg font-semibold text-gray-800">
-                Gestionar Autores
-              </h3>
-              <p class="text-sm text-gray-500 mt-1">Administra los autores</p>
-              <a
-                href="/authors"
-                class="mt-4 text-green-600 hover:text-green-700 text-sm flex items-center"
-              >
-                Ir a autores <i class="fas fa-arrow-right ml-1"></i>
-              </a>
-            </div>
-
-            <!-- Acceso a Categorías -->
-            <div
-              class="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow"
-            >
-              <div class="flex items-center justify-between mb-4">
-                <div
-                  class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center"
-                >
-                  <i class="fas fa-tags text-xl text-purple-600"></i>
-                </div>
-                <a
-                  href="/categories/add"
-                  class="text-purple-600 hover:text-purple-700"
-                >
-                  <i class="fas fa-plus"></i>
-                </a>
-              </div>
-              <h3 class="text-lg font-semibold text-gray-800">
-                Gestionar Categorías
-              </h3>
-              <p class="text-sm text-gray-500 mt-1">Organiza las categorías</p>
-              <a
-                href="/categories"
-                class="mt-4 text-purple-600 hover:text-purple-700 text-sm flex items-center"
-              >
-                Ir a categorías <i class="fas fa-arrow-right ml-1"></i>
-              </a>
-            </div>
-
-            <!-- Acceso a Editoriales -->
-            <div
-              class="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow"
-            >
-              <div class="flex items-center justify-between mb-4">
-                <div
-                  class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center"
-                >
-                  <i class="fas fa-building text-xl text-yellow-600"></i>
-                </div>
-                <a
-                  href="/publishers/add"
-                  class="text-yellow-600 hover:text-yellow-700"
-                >
-                  <i class="fas fa-plus"></i>
-                </a>
-              </div>
-              <h3 class="text-lg font-semibold text-gray-800">
-                Gestionar Editoriales
-              </h3>
-              <p class="text-sm text-gray-500 mt-1">
-                Administra las editoriales
-              </p>
-              <a
-                href="/publishers"
-                class="mt-4 text-yellow-600 hover:text-yellow-700 text-sm flex items-center"
-              >
-                Ir a editoriales <i class="fas fa-arrow-right ml-1"></i>
-              </a>
-            </div>
-          </div>
-
-          <!-- Área Informativa -->
-          <div class="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- Información del Sistema -->
-            <div
-              class="bg-white rounded-xl shadow-sm p-6"
+              class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
               data-aos="fade-up"
-              data-aos-delay="100"
             >
-              <h3 class="text-lg font-semibold text-gray-800 mb-4">
-                Sistema BiblioTech
-              </h3>
-              <div class="space-y-4">
-                <div class="flex items-center space-x-3 text-gray-600">
-                  <i class="fas fa-check-circle text-green-500"></i>
-                  <span>Gestión moderna de biblioteca</span>
+              <!-- Acceso a Libros -->
+              <div
+                class="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow"
+              >
+                <div class="flex items-center justify-between mb-4">
+                  <div
+                    class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center"
+                  >
+                    <i class="fas fa-book text-xl text-indigo-600"></i>
+                  </div>
+                  <a
+                    href="/books/add"
+                    class="text-indigo-600 hover:text-indigo-700"
+                  >
+                    <i class="fas fa-plus"></i>
+                  </a>
                 </div>
-                <div class="flex items-center space-x-3 text-gray-600">
-                  <i class="fas fa-shield-alt text-indigo-500"></i>
-                  <span>Sistema seguro y confiable</span>
+                <h3 class="text-lg font-semibold text-gray-800">
+                  Gestionar Libros
+                </h3>
+                <p class="text-sm text-gray-500 mt-1">
+                  Administra el catálogo de libros
+                </p>
+                <a
+                  href="/books"
+                  class="mt-4 text-indigo-600 hover:text-indigo-700 text-sm flex items-center"
+                >
+                  Ir a libros <i class="fas fa-arrow-right ml-1"></i>
+                </a>
+              </div>
+
+              <!-- Acceso a Autores -->
+              <div
+                class="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow"
+              >
+                <div class="flex items-center justify-between mb-4">
+                  <div
+                    class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center"
+                  >
+                    <i class="fas fa-user-edit text-xl text-green-600"></i>
+                  </div>
+                  <a
+                    href="/authors/add"
+                    class="text-green-600 hover:text-green-700"
+                  >
+                    <i class="fas fa-plus"></i>
+                  </a>
                 </div>
-                <div class="flex items-center space-x-3 text-gray-600">
-                  <i class="fas fa-sync text-blue-500"></i>
-                  <span>Actualizaciones periódicas</span>
+                <h3 class="text-lg font-semibold text-gray-800">
+                  Gestionar Autores
+                </h3>
+                <p class="text-sm text-gray-500 mt-1">Administra los autores</p>
+                <a
+                  href="/authors"
+                  class="mt-4 text-green-600 hover:text-green-700 text-sm flex items-center"
+                >
+                  Ir a autores <i class="fas fa-arrow-right ml-1"></i>
+                </a>
+              </div>
+
+              <!-- Acceso a Categorías -->
+              <div
+                class="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow"
+              >
+                <div class="flex items-center justify-between mb-4">
+                  <div
+                    class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center"
+                  >
+                    <i class="fas fa-tags text-xl text-purple-600"></i>
+                  </div>
+                  <a
+                    href="/categories/add"
+                    class="text-purple-600 hover:text-purple-700"
+                  >
+                    <i class="fas fa-plus"></i>
+                  </a>
                 </div>
+                <h3 class="text-lg font-semibold text-gray-800">
+                  Gestionar Categorías
+                </h3>
+                <p class="text-sm text-gray-500 mt-1">
+                  Organiza las categorías
+                </p>
+                <a
+                  href="/categories"
+                  class="mt-4 text-purple-600 hover:text-purple-700 text-sm flex items-center"
+                >
+                  Ir a categorías <i class="fas fa-arrow-right ml-1"></i>
+                </a>
+              </div>
+
+              <!-- Acceso a Editoriales -->
+              <div
+                class="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow"
+              >
+                <div class="flex items-center justify-between mb-4">
+                  <div
+                    class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center"
+                  >
+                    <i class="fas fa-building text-xl text-yellow-600"></i>
+                  </div>
+                  <a
+                    href="/publishers/add"
+                    class="text-yellow-600 hover:text-yellow-700"
+                  >
+                    <i class="fas fa-plus"></i>
+                  </a>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-800">
+                  Gestionar Editoriales
+                </h3>
+                <p class="text-sm text-gray-500 mt-1">
+                  Administra las editoriales
+                </p>
+                <a
+                  href="/publishers"
+                  class="mt-4 text-yellow-600 hover:text-yellow-700 text-sm flex items-center"
+                >
+                  Ir a editoriales <i class="fas fa-arrow-right ml-1"></i>
+                </a>
               </div>
             </div>
-            <!-- Recursos del Sistema -->
-            <div
-              class="bg-white rounded-xl shadow-sm p-6"
-              data-aos="fade-up"
-              data-aos-delay="200"
-            >
-              <h3 class="text-lg font-semibold text-gray-800 mb-4">
-                Recursos Disponibles
-              </h3>
-              <div class="space-y-4">
-                <div class="flex items-center space-x-3 text-gray-600">
-                  <div
-                    class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center"
-                  >
-                    <i class="fas fa-book text-blue-500"></i>
+
+            <!-- Área Informativa -->
+            <div class="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <!-- Información del Sistema -->
+              <div
+                class="bg-white rounded-xl shadow-sm p-6"
+                data-aos="fade-up"
+                data-aos-delay="100"
+              >
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                  Sistema BiblioTech
+                </h3>
+                <div class="space-y-4">
+                  <div class="flex items-center space-x-3 text-gray-600">
+                    <i class="fas fa-check-circle text-green-500"></i>
+                    <span>Gestión moderna de biblioteca</span>
                   </div>
-                  <div>
-                    <span class="text-sm text-gray-500">Libros</span>
-                    <p class="text-lg font-semibold">
-                      <%= typeof bookCount !== 'undefined' ? bookCount : '—' %>
-                    </p>
+                  <div class="flex items-center space-x-3 text-gray-600">
+                    <i class="fas fa-shield-alt text-indigo-500"></i>
+                    <span>Sistema seguro y confiable</span>
                   </div>
-                </div>
-                <div class="flex items-center space-x-3 text-gray-600">
-                  <div
-                    class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center"
-                  >
-                    <i class="fas fa-user-edit text-purple-500"></i>
-                  </div>
-                  <div>
-                    <span class="text-sm text-gray-500">Autores</span>
-                    <p class="text-lg font-semibold">
-                      <%= typeof authorCount !== 'undefined' ? authorCount : '—'
-                      %>
-                    </p>
+                  <div class="flex items-center space-x-3 text-gray-600">
+                    <i class="fas fa-sync text-blue-500"></i>
+                    <span>Actualizaciones periódicas</span>
                   </div>
                 </div>
-                <div class="flex items-center space-x-3 text-gray-600">
-                  <div
-                    class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center"
-                  >
-                    <i class="fas fa-chart-line text-green-500"></i>
-                  </div>
-                  <div>
-                    <span class="text-sm text-gray-500"
-                      >Actividad Reciente</span
+              </div>
+              <!-- Recursos del Sistema -->
+              <div
+                class="bg-white rounded-xl shadow-sm p-6"
+                data-aos="fade-up"
+                data-aos-delay="200"
+              >
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                  Recursos Disponibles
+                </h3>
+                <div class="space-y-4">
+                  <div class="flex items-center space-x-3 text-gray-600">
+                    <div
+                      class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center"
                     >
-                    <p class="text-lg font-semibold">
-                      <%= typeof recentActivity !== 'undefined' ? recentActivity
-                      : '—' %>
+                      <i class="fas fa-book text-blue-500"></i>
+                    </div>
+                    <div>
+                      <span class="text-sm text-gray-500">Libros</span>
+                      <p class="text-lg font-semibold">
+                        <%= typeof bookCount !== 'undefined' ? bookCount : '—'
+                        %>
+                      </p>
+                    </div>
+                  </div>
+                  <div class="flex items-center space-x-3 text-gray-600">
+                    <div
+                      class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center"
+                    >
+                      <i class="fas fa-user-edit text-purple-500"></i>
+                    </div>
+                    <div>
+                      <span class="text-sm text-gray-500">Autores</span>
+                      <p class="text-lg font-semibold">
+                        <%= typeof authorCount !== 'undefined' ? authorCount :
+                        '—' %>
+                      </p>
+                    </div>
+                  </div>
+                  <div class="flex items-center space-x-3 text-gray-600">
+                    <div
+                      class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center"
+                    >
+                      <i class="fas fa-chart-line text-green-500"></i>
+                    </div>
+                    <div>
+                      <span class="text-sm text-gray-500"
+                        >Actividad Reciente</span
+                      >
+                      <p class="text-lg font-semibold">
+                        <%= typeof recentActivity !== 'undefined' ?
+                        recentActivity : '—' %>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Tips del Sistema -->
+              <div
+                class="bg-white rounded-xl shadow-sm p-6"
+                data-aos="fade-up"
+                data-aos-delay="300"
+              >
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                  Tips del Sistema
+                </h3>
+                <div class="space-y-4">
+                  <div class="flex items-start space-x-3">
+                    <i class="fas fa-lightbulb text-yellow-500 mt-1"></i>
+                    <p class="text-sm text-gray-600">
+                      Usa las tarjetas de acceso rápido para navegar entre
+                      módulos
+                    </p>
+                  </div>
+                  <div class="flex items-start space-x-3">
+                    <i class="fas fa-lightbulb text-yellow-500 mt-1"></i>
+                    <p class="text-sm text-gray-600">
+                      Mantén actualizada la información de libros y autores
                     </p>
                   </div>
                 </div>
               </div>
             </div>
 
-            <!-- Tips del Sistema -->
+            <!-- Mensajes Flash -->
+            <% if (messages.success) { %>
             <div
-              class="bg-white rounded-xl shadow-sm p-6"
-              data-aos="fade-up"
-              data-aos-delay="300"
+              class="mt-6 rounded-lg bg-green-50 p-4 border-l-4 border-green-500 animate-fade-in"
             >
-              <h3 class="text-lg font-semibold text-gray-800 mb-4">
-                Tips del Sistema
-              </h3>
-              <div class="space-y-4">
-                <div class="flex items-start space-x-3">
-                  <i class="fas fa-lightbulb text-yellow-500 mt-1"></i>
-                  <p class="text-sm text-gray-600">
-                    Usa las tarjetas de acceso rápido para navegar entre módulos
-                  </p>
-                </div>
-                <div class="flex items-start space-x-3">
-                  <i class="fas fa-lightbulb text-yellow-500 mt-1"></i>
-                  <p class="text-sm text-gray-600">
-                    Mantén actualizada la información de libros y autores
-                  </p>
-                </div>
+              <div class="flex items-center">
+                <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                <p class="text-sm font-medium text-green-800">
+                  <%- messages.success %>
+                </p>
               </div>
             </div>
-          </div>
-
-          <!-- Mensajes Flash -->
-          <% if (messages.success) { %>
-          <div
-            class="mt-6 rounded-lg bg-green-50 p-4 border-l-4 border-green-500 animate-fade-in"
-          >
-            <div class="flex items-center">
-              <i class="fas fa-check-circle text-green-500 mr-3"></i>
-              <p class="text-sm font-medium text-green-800">
-                <%- messages.success %>
-              </p>
+            <% } %> <% if (messages.error) { %>
+            <div
+              class="mt-6 rounded-lg bg-red-50 p-4 border-l-4 border-red-500 animate-fade-in"
+            >
+              <div class="flex items-center">
+                <i class="fas fa-exclamation-circle text-red-500 mr-3"></i>
+                <p class="text-sm font-medium text-red-800">
+                  <%- messages.error %>
+                </p>
+              </div>
             </div>
+            <% } %>
           </div>
-          <% } %> <% if (messages.error) { %>
-          <div
-            class="mt-6 rounded-lg bg-red-50 p-4 border-l-4 border-red-500 animate-fade-in"
-          >
-            <div class="flex items-center">
-              <i class="fas fa-exclamation-circle text-red-500 mr-3"></i>
-              <p class="text-sm font-medium text-red-800">
-                <%- messages.error %>
-              </p>
-            </div>
-          </div>
-          <% } %>
         </main>
       </div>
     </div>

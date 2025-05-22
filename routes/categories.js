@@ -9,9 +9,15 @@ router.get("/", function (req, res, next) {
     function (err, rows) {
       if (err) {
         req.flash("error", err);
-        res.render("categories/index", { data: "" });
+        res.render("categories/index", {
+          title: "Gestión de Categorías",
+          data: "",
+        });
       } else {
-        res.render("categories/index", { data: rows });
+        res.render("categories/index", {
+          title: "Gestión de Categorías",
+          data: rows,
+        });
       }
     }
   );

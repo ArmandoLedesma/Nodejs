@@ -2,61 +2,26 @@
 <html lang="es">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
     <title>Gestión de Autores - Biblioteca</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
   </head>
   <body class="bg-gray-50">
     <div class="min-h-screen flex flex-col">
-      
-      <nav class="bg-indigo-700 text-white shadow-lg">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div class="flex justify-between h-16">
-            <div class="flex items-center space-x-4">
-              <a href="/" class="flex items-center space-x-2">
-                <i class="fas fa-book-open text-2xl text-indigo-200"></i>
-                <h1 class="text-2xl font-bold text-white">Biblioteca</h1>
-              </a>
-              <div class="hidden md:flex space-x-4">
-                <a
-                  href="/books"
-                  class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                  >Libros</a
-                >
-                <a
-                  href="/authors"
-                  class="bg-indigo-800 text-white px-3 py-2 rounded-md text-sm font-medium"
-                  >Autores</a
-                >
-                <a
-                  href="/categories"
-                  class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                  >Categorías</a
-                >
-                <a
-                  href="/publishers"
-                  class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                  >Editoriales</a
-                >
-              </div>
-            </div>
-            <!-- <div class="flex items-center">
-              <a
-                href="/authors/add"
-                class="group inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-white hover:bg-indigo-50 shadow-sm transition-all duration-200 ease-in-out"
-              >
-                <i class="fas fa-plus mr-2"></i>
-                <span>Nuevo Autor</span>
-              </a>
-            </div> -->
-          </div>
-        </div>
-      </nav>
-
+      <!-- Contenido principal -->
       <div class="max-w-7xl w-full mx-auto py-8 px-4 sm:px-6 lg:px-8 flex-grow">
+        <!-- Mensajes Flash -->
         <% if (messages.success) { %>
-        <div class="mb-6 rounded-lg bg-green-50 p-4 border-l-4 border-green-500 animate-fade-in">
+        <div
+          class="mb-6 rounded-lg bg-green-50 p-4 border-l-4 border-green-500 animate-fade-in"
+        >
           <div class="flex items-center">
             <i class="fas fa-check-circle text-green-500 mr-3"></i>
             <p class="text-sm font-medium text-green-800">
@@ -64,10 +29,10 @@
             </p>
           </div>
         </div>
-        <% } %> 
-        
-        <% if (messages.error) { %>
-        <div class="mb-6 rounded-lg bg-red-50 p-4 border-l-4 border-red-500 animate-fade-in">
+        <% } %> <% if (messages.error) { %>
+        <div
+          class="mb-6 rounded-lg bg-red-50 p-4 border-l-4 border-red-500 animate-fade-in"
+        >
           <div class="flex items-center">
             <i class="fas fa-exclamation-circle text-red-500 mr-3"></i>
             <p class="text-sm font-medium text-red-800">
@@ -77,35 +42,69 @@
         </div>
         <% } %>
 
-        <div class="bg-white shadow rounded-xl overflow-hidden border border-gray-100">
+        <div
+          class="bg-white shadow rounded-xl overflow-hidden border border-gray-100"
+        >
           <div class="px-6 py-4 bg-gradient-to-r from-indigo-700 to-indigo-600">
-            <h2 class="text-xl font-semibold text-white">Catálogo de Autores</h2>
+            <h2 class="text-xl font-semibold text-white">
+              Catálogo de Autores
+            </h2>
           </div>
-          
+
           <% if(data.length) { %>
           <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
               <thead class="bg-gray-50">
                 <tr>
-                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">#</th>
-                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
-                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
-                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                  <th
+                    scope="col"
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    #
+                  </th>
+                  <th
+                    scope="col"
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Nombre
+                  </th>
+                  <th
+                    scope="col"
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Estado
+                  </th>
+                  <th
+                    scope="col"
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Acciones
+                  </th>
                 </tr>
               </thead>
               <tbody class="bg-white divide-y divide-gray-200">
                 <% data.forEach((author, index) => { %>
-                <tr class="hover:bg-indigo-50 transition-colors duration-150 ease-in-out">
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><%= index + 1 %></td>
-                  <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="text-sm font-medium text-gray-900"><%= author.name %></div>
+                <tr
+                  class="hover:bg-indigo-50 transition-colors duration-150 ease-in-out"
+                >
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <%= index + 1 %>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap">
-                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%= author.state === 'activo' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' %>">
+                    <div class="text-sm font-medium text-gray-900">
+                      <%= author.name %>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%= author.state === 'activo' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' %>"
+                    >
                       <%= author.state %>
                     </span>
                   </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                  <td
+                    class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2"
+                  >
                     <a
                       href="/authors/edit/<%= author.id %>"
                       class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-amber-700 bg-amber-100 hover:bg-amber-200 transition-colors duration-150"
@@ -127,13 +126,22 @@
           </div>
           <% } else { %>
           <div class="text-center py-16">
-            <div class="mx-auto h-24 w-24 text-indigo-300 bg-indigo-100 rounded-full flex items-center justify-center">
+            <div
+              class="mx-auto h-24 w-24 text-indigo-300 bg-indigo-100 rounded-full flex items-center justify-center"
+            >
               <i class="fas fa-user-pen text-4xl"></i>
             </div>
-            <h3 class="mt-4 text-lg font-medium text-gray-900">No hay autores registrados</h3>
-            <p class="mt-2 text-base text-gray-500">Comienza agregando un nuevo autor a tu biblioteca.</p>
+            <h3 class="mt-4 text-lg font-medium text-gray-900">
+              No hay autores registrados
+            </h3>
+            <p class="mt-2 text-base text-gray-500">
+              Comienza agregando un nuevo autor a tu biblioteca.
+            </p>
             <div class="mt-6">
-              <a href="/authors/add" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+              <a
+                href="/authors/add"
+                class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
                 <i class="fas fa-plus mr-2"></i>
                 Agregar mi primer autor
               </a>
@@ -142,10 +150,12 @@
           <% } %>
         </div>
       </div>
-      
+
       <footer class="bg-white border-t border-gray-200 py-4">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <p class="text-center text-sm text-gray-500">© <%= new Date().getFullYear() %> Sistema de Gestión de Biblioteca</p>
+          <p class="text-center text-sm text-gray-500">
+            © <%= new Date().getFullYear() %> Sistema de Gestión de Biblioteca
+          </p>
         </div>
       </footer>
     </div>
