@@ -15,9 +15,15 @@ router.get("/", function (req, res, next) {
     function (err, rows) {
       if (err) {
         req.flash("error", err);
-        res.render("publishers/index", { data: "" });
+        res.render("publishers/index", {
+          title: "Gestión de Editoriales",
+          data: "",
+        });
       } else {
-        res.render("publishers/index", { data: rows });
+        res.render("publishers/index", {
+          title: "Gestión de Editoriales",
+          data: rows,
+        });
       }
     }
   );

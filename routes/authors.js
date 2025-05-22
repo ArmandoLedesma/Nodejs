@@ -7,9 +7,9 @@ router.get("/", function (req, res, next) {
   dbConn.query("SELECT * FROM authors ORDER BY id desc", function (err, rows) {
     if (err) {
       req.flash("error", err);
-      res.render("authors/index", { data: "" });
+      res.render("authors/index", { title: "Gestión de Autores", data: "" });
     } else {
-      res.render("authors/index", { data: rows });
+      res.render("authors/index", { title: "Gestión de Autores", data: rows });
     }
   });
 });

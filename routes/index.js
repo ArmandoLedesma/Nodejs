@@ -11,6 +11,7 @@ router.get("/", function (req, res, next) {
       if (err) {
         req.flash("error", err);
         res.render("index", {
+          title: "Panel de Control",
           bookCount: "0",
           authorCount: "0",
           recentActivity: "0",
@@ -23,6 +24,7 @@ router.get("/", function (req, res, next) {
             if (err) {
               req.flash("error", err);
               res.render("index", {
+                title: "Panel de Control",
                 bookCount: bookResults[0].count,
                 authorCount: "0",
                 recentActivity: "0",
@@ -44,6 +46,7 @@ router.get("/", function (req, res, next) {
           `,
                 function (err, activityResults) {
                   res.render("index", {
+                    title: "Panel de Control",
                     bookCount: bookResults[0].count,
                     authorCount: authorResults[0].count,
                     recentActivity: err ? "0" : activityResults[0].count,
