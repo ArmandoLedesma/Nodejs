@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Gestión de Usuarios - Biblioteca</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  </head>
+  <body class="bg-gray-50">
+    <div class="min-h-screen flex flex-col">
+      <!-- Contenido principal -->
+      <div class="max-w-7xl w-full mx-auto py-8 px-4 sm:px-6 lg:px-8 flex-grow">
+        <!-- Mensajes Flash -->
+        <% if (messages.success) { %>
+        <div class="mb-6 rounded-lg bg-green-50 p-4 border-l-4 border-green-500">
+          <div class="flex items-center">
+            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+            <p class="text-sm font-medium text-green-800"><%- messages.success %></p>
+          </div>
+        </div>
+        <% } %>
+        <% if (messages.error) { %>
+        <div class="mb-6 rounded-lg bg-red-50 p-4 border-l-4 border-red-500">
+          <div class="flex items-center">
+            <i class="fas fa-exclamation-circle text-red-500 mr-3"></i>
+            <p class="text-sm font-medium text-red-800"><%- messages.error %></p>
+          </div>
+        </div>
+        <% } %>
+
+        <div class="bg-white shadow rounded-xl overflow-hidden border border-gray-100">
+          <!-- Encabezado -->
+          <div class="px-6 py-4 bg-gradient-to-r from-indigo-700 to-indigo-600 flex justify-between items-center">
+            <h2 class="text-xl font-semibold text-white">Gestión de Usuarios</h2>
+            <a
+              href="/users/add"
+              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-white hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-indigo-700 focus:ring-white"
+            >
+              <i class="fas fa-plus mr-2"></i>
+              Nuevo Usuario
+            </a>
+          </div>
+
+          <!-- Filtros -->
+          <div class="p-4 border-b border-gray-200 bg-gray-50">
+            <form action="/users" method="GET" class="space-y-4">
+              <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="relative">
+                  <input
+                    type="text"
+                    name="search"
+                    value="<%= filters.search || '' %>"
+                    placeholder="Buscar por nombre, documento o email..."
+                    class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                  />
+                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <i class="fas fa-search text-gray-400"></i>
+                  </div>
+                </div>
+
+                <div>
+                  <select
+                    name="user_type"
+                    class="w-full border border-gray-300 rounded-md py-2 pl-3 pr-10 focus:ring-indigo-500 focus:border-indigo-500"
+                  >
+                    <option value="">Todos los tipos</option>
+                    <option value="estudiante" <%= filters.user_type === 'estudiante' ? 'selected' : '' %>>Estudiante</option>
+                    <option value="profesor" <%= filters.user_type === 'profesor' ? 'selected' : '' %>>Profesor</option>
+                    <option value="administrativo" <%= filters.user_type === 'administrativo' ? 'selected' : '' %>>Administrativo</option>
+                  </select>
+                </div>
+
+                <div>
+                  <select
+                    name="state"
+                    class="w-full border border-gray-300 rounded-md py-2 pl-3 pr-10 focus:ring-indigo-500 focus:border-indigo-500"
+                  >
+                    <option value="">Todos los estados</option>
+                    <option value="activo" <%= filters.state === 'activo' ? 'selected' : '' %>>Activo</option>
+                    <option value="inactivo" <%= filters.state === 'inactivo' ? 'selected' : '' %>>Inactivo</option>
+                    <option value="suspendido" <%= filters.state === 'suspendido' ? 'selected' : '' %>>Suspendido</option>
+                  </select>
+                </div>
+
+                <div class="flex space-x-2">
+                  <button
+                    type="submit"
+                    class="flex-1 bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  >
+                    <i class="fas fa-filter mr-2"></i>
+                    Filtrar
+                  </button>
+                  <a
+                    href="/users"
+                    class="flex-1 bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 text-center"
+                  >
+                    <i class="fas fa-undo mr-2"></i>
+                    Limpiar
+                  </a>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <% if(data.length) { %>
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <a href="/users?<%= new URLSearchParams({...filters, orderBy: 'id', order: filters.order === 'asc' ? 'desc' : 'asc'}) %>" class="flex items-center space-x-1 hover:text-gray-700">
+                      <span>#</span>
+                      <% if(filters.orderBy === 'id') { %>
+                        <i class="fas fa-sort-<%= filters.order === 'asc' ? 'up' : 'down' %> ml-1"></i>
+                      <% } %>
+                    </a>
+                  </th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Documento
+                  </th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <a href="/users?<%= new URLSearchParams({...filters, orderBy: 'first_name', order: filters.order === 'asc' ? 'desc' : 'asc'}) %>" class="flex items-center space-x-1 hover:text-gray-700">
+                      <span>Nombre</span>
+                      <% if(filters.orderBy === 'first_name') { %>
+                        <i class="fas fa-sort-<%= filters.order === 'asc' ? 'up' : 'down' %> ml-1"></i>
+                      <% } %>
+                    </a>
+                  </th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <a href="/users?<%= new URLSearchParams({...filters, orderBy: 'email', order: filters.order === 'asc' ? 'desc' : 'asc'}) %>" class="flex items-center space-x-1 hover:text-gray-700">
+                      <span>Email</span>
+                      <% if(filters.orderBy === 'email') { %>
+                        <i class="fas fa-sort-<%= filters.order === 'asc' ? 'up' : 'down' %> ml-1"></i>
+                      <% } %>
+                    </a>
+                  </th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Teléfono
+                  </th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Tipo
+                  </th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Estado
+                  </th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Acciones
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <% data.forEach((user, index) => { %>
+                <tr class="hover:bg-indigo-50 transition-colors duration-150 ease-in-out">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <%= ((pagination.current - 1) * pagination.limit) + index + 1 %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm text-gray-900"><%= user.document_type %>: <%= user.document_number %></div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm font-medium text-gray-900"><%= user.first_name %> <%= user.last_name %></div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm text-gray-600"><%= user.email %></div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm text-gray-600"><%= user.phone %></div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                      <% if(user.user_type === 'estudiante') { %>
+                        bg-blue-100 text-blue-800
+                      <% } else if(user.user_type === 'profesor') { %>
+                        bg-purple-100 text-purple-800
+                      <% } else { %>
+                        bg-gray-100 text-gray-800
+                      <% } %>
+                    ">
+                      <%= user.user_type %>
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                      <% if(user.state === 'activo') { %>
+                        bg-green-100 text-green-800
+                      <% } else if(user.state === 'inactivo') { %>
+                        bg-gray-100 text-gray-800
+                      <% } else { %>
+                        bg-red-100 text-red-800
+                      <% } %>
+                    ">
+                      <%= user.state %>
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                    <a
+                      href="/users/edit/<%= user.id %>"
+                      class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-amber-700 bg-amber-100 hover:bg-amber-200 transition-colors duration-150"
+                    >
+                      <i class="fas fa-edit mr-1"></i> Editar
+                    </a>
+                    <a
+                      href="/users/delete/<%= user.id %>"
+                      onclick="return confirm('¿Estás seguro de eliminar este usuario?');"
+                      class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-red-700 bg-red-100 hover:bg-red-200 transition-colors duration-150"
+                    >
+                      <i class="fas fa-trash-alt mr-1"></i> Eliminar
+                    </a>
+                  </td>
+                </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+
+          <% if (pagination.total > 1) { %>
+          <div class="px-6 py-4 bg-gray-50 border-t border-gray-200">
+            <div class="flex items-center justify-between">
+              <div class="flex-1 flex justify-between sm:hidden">
+                <% if (pagination.current > 1) { %>
+                <a
+                  href="/users?<%= new URLSearchParams({...filters, page: pagination.current - 1}) %>"
+                  class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                >
+                  Anterior
+                </a>
+                <% } %>
+                <% if (pagination.current < pagination.total) { %>
+                <a
+                  href="/users?<%= new URLSearchParams({...filters, page: pagination.current + 1}) %>"
+                  class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                >
+                  Siguiente
+                </a>
+                <% } %>
+              </div>
+              <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                <div>
+                  <p class="text-sm text-gray-700">
+                    Mostrando
+                    <span class="font-medium"><%= ((pagination.current - 1) * pagination.limit) + 1 %></span>
+                    a
+                    <span class="font-medium"><%= Math.min(pagination.current * pagination.limit, pagination.totalItems) %></span>
+                    de
+                    <span class="font-medium"><%= pagination.totalItems %></span>
+                    resultados
+                  </p>
+                </div>
+                <div>
+                  <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                    <% if (pagination.current > 1) { %>
+                    <a
+                      href="/users?<%= new URLSearchParams({...filters, page: pagination.current - 1}) %>"
+                      class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                    >
+                      <span class="sr-only">Anterior</span>
+                      <i class="fas fa-chevron-left"></i>
+                    </a>
+                    <% } %>
+
+                    <% for(let i = 1; i <= pagination.total; i++) { %>
+                    <% if (
+                      i === 1 ||
+                      i === pagination.total ||
+                      (i >= pagination.current - 2 && i <= pagination.current + 2)
+                    ) { %>
+                    <a
+                      href="/users?<%= new URLSearchParams({...filters, page: i}) %>"
+                      class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium <%= pagination.current === i ? 'text-indigo-600 bg-indigo-50 border-indigo-500 z-10' : 'text-gray-500 hover:bg-gray-50' %>"
+                    >
+                      <%= i %>
+                    </a>
+                    <% } else if (
+                      i === pagination.current - 3 ||
+                      i === pagination.current + 3
+                    ) { %>
+                    <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
+                      ...
+                    </span>
+                    <% } %>
+                    <% } %>
+
+                    <% if (pagination.current < pagination.total) { %>
+                    <a
+                      href="/users?<%= new URLSearchParams({...filters, page: pagination.current + 1}) %>"
+                      class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                    >
+                      <span class="sr-only">Siguiente</span>
+                      <i class="fas fa-chevron-right"></i>
+                    </a>
+                    <% } %>
+                  </nav>
+                </div>
+              </div>
+            </div>
+          </div>
+          <% } %>
+          <% } else { %>
+          <div class="text-center py-16">
+            <div class="mx-auto h-24 w-24 text-indigo-300 bg-indigo-100 rounded-full flex items-center justify-center">
+              <i class="fas fa-users text-4xl"></i>
+            </div>
+            <h3 class="mt-4 text-lg font-medium text-gray-900">No hay usuarios registrados</h3>
+            <p class="mt-2 text-base text-gray-500">Comienza agregando un nuevo usuario al sistema.</p>
+            <div class="mt-6">
+              <a
+                href="/users/add"
+                class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                <i class="fas fa-plus mr-2"></i>
+                Agregar mi primer usuario
+              </a>
+            </div>
+          </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

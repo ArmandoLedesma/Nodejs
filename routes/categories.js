@@ -174,6 +174,7 @@ router.get("/edit/(:id)", function (req, res, next) {
         res.redirect("/categories");
       } else {
         res.render("categories/edit", {
+          title: "Editar Categoría",
           id: rows[0].id,
           name: rows[0].name,
           state: rows[0].state,
