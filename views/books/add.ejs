@@ -122,18 +122,18 @@
 
             <!-- Campo Año de Publicación -->
             <div>
-              <label for="publication_year" class="block text-sm font-medium text-gray-700">Año de Publicación</label>
+              <label for="year_published" class="block text-sm font-medium text-gray-700">Año de Publicación</label>
               <div class="mt-1 relative rounded-md shadow-sm">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <i class="fas fa-calendar text-gray-400"></i>
                 </div>
                 <input
                   type="number"
-                  id="publication_year"
-                  name="publication_year"
+                  id="year_published"
+                  name="year_published"
                   class="pl-10 appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   placeholder="Ingrese el año de publicación"
-                  value="<%= typeof publication_year !== 'undefined' ? publication_year : '' %>"
+                  value="<%= typeof year_published !== 'undefined' ? year_published : '' %>"
                   min="1800"
                   max="<%= new Date().getFullYear() %>"
                   required
@@ -143,18 +143,18 @@
 
             <!-- Campo Número de Páginas -->
             <div>
-              <label for="page_count" class="block text-sm font-medium text-gray-700">Número de Páginas</label>
+              <label for="num_pages" class="block text-sm font-medium text-gray-700">Número de Páginas</label>
               <div class="mt-1 relative rounded-md shadow-sm">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <i class="fas fa-file-lines text-gray-400"></i>
                 </div>
                 <input
                   type="number"
-                  id="page_count"
-                  name="page_count"
+                  id="num_pages"
+                  name="num_pages"
                   class="pl-10 appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   placeholder="Ingrese el número de páginas"
-                  value="<%= typeof page_count !== 'undefined' ? page_count : '' %>"
+                  value="<%= typeof num_pages !== 'undefined' ? num_pages : '' %>"
                   min="1"
                   required
                 />

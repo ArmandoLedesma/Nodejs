@@ -39,7 +39,7 @@ router.get("/", function (req, res, next) {
   }
 
   if (req.query.year) {
-    baseQuery += " AND books.publication_year = ?";
+    baseQuery += " AND books.year_published = ?";
     params.push(req.query.year);
   }
 
@@ -50,9 +50,13 @@ router.get("/", function (req, res, next) {
 
   // Consulta principal con paginación
   const mainQuery = `
-        SELECT books.*, 
-               authors.name as author_name, 
-               publishers.name as publisher_name, 
+        SELECT books.id,
+               books.isbn,
+               books.name,
+               books.year_published,
+               books.num_pages,
+               authors.name as author_name,
+               publishers.name as publisher_name,
                categories.name as category_name 
         ${baseQuery} 
         LIMIT ? OFFSET ?
@@ -141,7 +145,8 @@ router.get("/add", function (req, res, next) {
                   if (err) {
                     req.flash("error", err);
                     res.redirect("/books");
-                  } else {                    // renderiza a views/books/add.ejs con todas las listas
+                  } else {
+                    // renderiza a views/books/add.ejs con todas las listas
                     res.render("books/add", {
                       title: "Agregar Libro",
                       name: "",
@@ -149,8 +154,8 @@ router.get("/add", function (req, res, next) {
                       author_id: "",
                       publisher_id: "",
                       category_id: "",
-                      publication_year: "",
-                      page_count: "",
+                      year_published: "",
+                      num_pages: "",
                       authors: authors,
                       publishers: publishers,
                       categories: categories,
@@ -172,8 +177,8 @@ router.post("/add", function (req, res, next) {
   let name = req.body.name;
   let author_id = req.body.author_id;
   let publisher_id = req.body.publisher_id;
-  let publication_year = req.body.publication_year;
-  let page_count = req.body.page_count;
+  let year_published = req.body.year_published;
+  let num_pages = req.body.num_pages;
   let category_id = req.body.category_id;
   let errors = false;
 
@@ -182,8 +187,8 @@ router.post("/add", function (req, res, next) {
     !name ||
     !author_id ||
     !publisher_id ||
-    !publication_year ||
-    !page_count ||
+    !year_published ||
+    !num_pages ||
     !category_id
   ) {
     errors = true;
@@ -211,15 +216,16 @@ router.post("/add", function (req, res, next) {
                     if (err) {
                       req.flash("error", err);
                       res.redirect("/books");
-                    } else {                      // Renderizar a add.ejs con mensaje de error
+                    } else {
+                      // Renderizar a add.ejs con mensaje de error
                       res.render("books/add", {
                         title: "Agregar Libro",
                         isbn: isbn,
                         name: name,
                         author_id: author_id,
                         publisher_id: publisher_id,
-                        publication_year: publication_year,
-                        page_count: page_count,
+                        year_published: year_published,
+                        num_pages: num_pages,
                         category_id: category_id,
                         authors: authors,
                         publishers: publishers,
@@ -243,8 +249,8 @@ router.post("/add", function (req, res, next) {
       name: name,
       author_id: author_id,
       publisher_id: publisher_id,
-      publication_year: publication_year,
-      page_count: page_count,
+      year_published: year_published,
+      num_pages: num_pages,
       category_id: category_id,
     };
 
@@ -273,14 +279,15 @@ router.post("/add", function (req, res, next) {
                         if (err) {
                           req.flash("error", err);
                           res.redirect("/books");
-                        } else {                      res.render("books/add", {
+                        } else {
+                          res.render("books/add", {
                             title: "Agregar Libro",
                             isbn: form_data.isbn,
                             name: form_data.name,
                             author_id: form_data.author_id,
                             publisher_id: form_data.publisher_id,
-                            publication_year: form_data.publication_year,
-                            page_count: form_data.page_count,
+                            year_published: form_data.year_published,
+                            num_pages: form_data.num_pages,
                             category_id: form_data.category_id,
                             authors: authors,
                             publishers: publishers,
@@ -347,7 +354,8 @@ router.get("/edit/(:id)", function (req, res, next) {
                         if (err) {
                           req.flash("error", err);
                           res.redirect("/books");
-                        } else {                          // Renderizar edit.ejs con datos
+                        } else {
+                          // Renderizar edit.ejs con datos
                           res.render("books/edit", {
                             title: "Editar Libro",
                             id: rows[0].id,
@@ -355,8 +363,8 @@ router.get("/edit/(:id)", function (req, res, next) {
                             name: rows[0].name,
                             author_id: rows[0].author_id,
                             publisher_id: rows[0].publisher_id,
-                            publication_year: rows[0].publication_year,
-                            page_count: rows[0].page_count,
+                            year_published: rows[0].year_published,
+                            num_pages: rows[0].num_pages,
                             category_id: rows[0].category_id,
                             authors: authors,
                             publishers: publishers,
@@ -383,8 +391,8 @@ router.post("/update/:id", function (req, res, next) {
   let name = req.body.name;
   let author_id = req.body.author_id;
   let publisher_id = req.body.publisher_id;
-  let publication_year = req.body.publication_year;
-  let page_count = req.body.page_count;
+  let year_published = req.body.year_published;
+  let num_pages = req.body.num_pages;
   let category_id = req.body.category_id;
   let errors = false;
 
@@ -393,8 +401,8 @@ router.post("/update/:id", function (req, res, next) {
     !name ||
     !author_id ||
     !publisher_id ||
-    !publication_year ||
-    !page_count ||
+    !year_published ||
+    !num_pages ||
     !category_id
   ) {
     errors = true;
@@ -409,8 +417,8 @@ router.post("/update/:id", function (req, res, next) {
       name: name,
       author_id: author_id,
       publisher_id: publisher_id,
-      publication_year: publication_year,
-      page_count: page_count,
+      year_published: year_published,
+      num_pages: num_pages,
       category_id: category_id,
     };
 

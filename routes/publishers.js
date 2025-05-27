@@ -172,7 +172,13 @@ router.post("/add", function (req, res, next) {
         if (err) {
           req.flash("error", err);
           res.render("publishers/add", {
+            title: "Agregar Editorial",
             name: form_data.name,
+            contact_info: form_data.contact_info,
+            address: form_data.address,
+            website: form_data.website,
+            email: form_data.email,
+            state: form_data.state,
           });
         } else {
           req.flash("success", "Editorial agregada exitosamente");
