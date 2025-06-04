@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Gestión de Préstamos - Biblioteca</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body class="bg-gray-50">
+    <div class="min-h-screen flex flex-col">
+      <!-- Contenido principal -->
+      <div class="max-w-7xl w-full mx-auto py-8 px-4 sm:px-6 lg:px-8 flex-grow">
+        <!-- Mensajes Flash -->
+        <% if (messages.success) { %>
+        <div
+          class="mb-6 rounded-lg bg-green-50 p-4 border-l-4 border-green-500 animate-fade-in"
+        >
+          <div class="flex items-center">
+            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+            <p class="text-sm font-medium text-green-800">
+              <%- messages.success %>
+            </p>
+          </div>
+        </div>
+        <% } %> 
+        <% if (messages.error) { %>
+        <div
+          class="mb-6 rounded-lg bg-red-50 p-4 border-l-4 border-red-500 animate-fade-in"
+        >
+          <div class="flex items-center">
+            <i class="fas fa-exclamation-circle text-red-500 mr-3"></i>
+            <p class="text-sm font-medium text-red-800">
+              <%- messages.error %>
+            </p>
+          </div>
+        </div>
+        <% } %>
+
+        <div
+          class="bg-white shadow rounded-xl overflow-hidden border border-gray-100"
+        >
+          <!-- Encabezado -->
+          <div class="px-6 py-4 bg-gradient-to-r from-indigo-700 to-indigo-600">
+            <div class="flex justify-between items-center">
+              <h2 class="text-xl font-semibold text-white">
+                Gestión de Préstamos
+              </h2>
+              <a
+                href="/loans/add"
+                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-white hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-indigo-700 focus:ring-white transition-colors duration-150"
+              >
+                <i class="fas fa-plus mr-2"></i>
+                Nuevo Préstamo
+              </a>
+            </div>
+          </div>
+
+          <!-- Filtros -->
+          <div class="p-4 border-b border-gray-200 bg-gray-50">
+            <form action="/loans" method="GET" class="space-y-4">
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="relative">
+                  <input
+                    type="text"
+                    name="search"
+                    value="<%= filters.search || '' %>"
+                    placeholder="Buscar por usuario o libro..."
+                    class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                  />
+                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <i class="fas fa-search text-gray-400"></i>
+                  </div>
+                </div>
+
+                <div>
+                  <select
+                    name="status"
+                    class="w-full border border-gray-300 rounded-md py-2 pl-3 pr-10 focus:ring-indigo-500 focus:border-indigo-500"
+                  >
+                    <option value="">Todos los estados</option>
+                    <option value="prestado" <%= filters.status === 'prestado' ? 'selected' : '' %>>Prestado</option>
+                    <option value="devuelto" <%= filters.status === 'devuelto' ? 'selected' : '' %>>Devuelto</option>
+                    <option value="vencido" <%= filters.status === 'vencido' ? 'selected' : '' %>>Vencido</option>
+                  </select>
+                </div>
+
+                <div class="flex space-x-3">
+                  <button
+                    type="submit"
+                    class="flex-1 bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  >
+                    <i class="fas fa-filter mr-2"></i>
+                    Filtrar
+                  </button>
+                  <a
+                    href="/loans"
+                    class="flex-1 bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 text-center"
+                  >
+                    <i class="fas fa-undo mr-2"></i>
+                    Limpiar
+                  </a>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <% if(data.length) { %>
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <a href="/loans?<%= new URLSearchParams({...filters, orderBy: 'id', order: filters.order === 'asc' ? 'desc' : 'asc'}) %>" class="flex items-center space-x-1 hover:text-gray-700">
+                      <span>#</span>
+                      <% if(filters.orderBy === 'id') { %>
+                        <i class="fas fa-sort-<%= filters.order === 'asc' ? 'up' : 'down' %> ml-1"></i>
+                      <% } %>
+                    </a>
+                  </th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Usuario
+                  </th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Libro
+                  </th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <a href="/loans?<%= new URLSearchParams({...filters, orderBy: 'loan_date', order: filters.order === 'asc' ? 'desc' : 'asc'}) %>" class="flex items-center space-x-1 hover:text-gray-700">
+                      <span>Fecha Préstamo</span>
+                      <% if(filters.orderBy === 'loan_date') { %>
+                        <i class="fas fa-sort-<%= filters.order === 'asc' ? 'up' : 'down' %> ml-1"></i>
+                      <% } %>
+                    </a>
+                  </th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Fecha Devolución
+                  </th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Estado
+                  </th>
+                  <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Acciones
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <% data.forEach((loan, index) => { %>
+                <tr class="hover:bg-indigo-50 transition-colors duration-150 ease-in-out">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <%= ((pagination.current - 1) * pagination.limit) + index + 1 %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm text-gray-900">
+                      <%= loan.first_name %> <%= loan.last_name %>
+                    </div>
+                    <div class="text-sm text-gray-500">
+                      <%= loan.document_number %>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm text-gray-900">
+                      <%= loan.book_name %>
+                    </div>
+                    <div class="text-sm text-gray-500">
+                      ISBN: <%= loan.isbn %>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <%= new Date(loan.loan_date).toLocaleDateString('es-ES', { 
+                      year: 'numeric', 
+                      month: 'long', 
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    }) %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <% if (loan.actual_return_date) { %>
+                      <%= new Date(loan.actual_return_date).toLocaleDateString('es-ES', { 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      }) %>
+                    <% } else { %>
+                      <%= new Date(loan.expected_return_date).toLocaleDateString('es-ES', { 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric'
+                      }) %> (Esperada)
+                    <% } %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <% if (loan.status === 'prestado') { %>
+                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                        Prestado
+                      </span>
+                    <% } else if (loan.status === 'devuelto') { %>
+                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                        Devuelto
+                      </span>
+                    <% } else { %>
+                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                        Vencido
+                      </span>
+                    <% } %>
+                  </td>                  <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <% if (loan.status === 'prestado') { %>
+                      <form action="/loans/return/<%= loan.id %>" method="POST" class="inline-block">
+                        <button type="submit"
+                          class="text-indigo-600 hover:text-indigo-900 bg-transparent border-0 p-0 cursor-pointer"
+                          onclick="return confirm('¿Está seguro de que desea registrar la devolución de este libro?')"
+                        >
+                          <i class="fas fa-undo mr-1"></i> Devolver
+                        </button>
+                      </form>
+                    <% } else if (loan.status === 'devuelto') { %>
+                      <span class="text-green-600">
+                        <i class="fas fa-check-circle mr-1"></i> Devuelto el <%= new Date(loan.actual_return_date).toLocaleDateString('es-ES', { 
+                          year: 'numeric', 
+                          month: 'long', 
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        }) %>
+                      </span>
+                    <% } else if (loan.status === 'vencido') { %>
+                      <div class="flex items-center justify-end space-x-2">
+                        <span class="text-red-600">
+                          <i class="fas fa-exclamation-circle mr-1"></i> Vencido
+                        </span>
+                        <form action="/loans/return/<%= loan.id %>" method="POST" class="inline-block">
+                          <button type="submit"
+                            class="text-indigo-600 hover:text-indigo-900 bg-transparent border-0 p-0 cursor-pointer ml-2"
+                            onclick="return confirm('¿Está seguro de que desea registrar la devolución de este libro?')"
+                          >
+                            <i class="fas fa-undo mr-1"></i> Registrar devolución
+                          </button>
+                        </form>
+                      </div>
+                    <% } %>
+                  </td>
+                </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+
+          <% if (pagination.total > 1) { %>
+          <div class="px-6 py-4 bg-gray-50 border-t border-gray-200">
+            <div class="flex items-center justify-between">
+              <div class="flex-1 flex justify-between sm:hidden">
+                <% if (pagination.current > 1) { %>
+                <a
+                  href="/loans?<%= new URLSearchParams({...filters, page: pagination.current - 1}) %>"
+                  class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                >
+                  Anterior
+                </a>
+                <% } %>
+                <% if (pagination.current < pagination.total) { %>
+                <a
+                  href="/loans?<%= new URLSearchParams({...filters, page: pagination.current + 1}) %>"
+                  class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                >
+                  Siguiente
+                </a>
+                <% } %>
+              </div>
+              <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                <div>
+                  <p class="text-sm text-gray-700">
+                    Mostrando
+                    <span class="font-medium"><%= ((pagination.current - 1) * pagination.limit) + 1 %></span>
+                    a
+                    <span class="font-medium"><%= Math.min(pagination.current * pagination.limit, pagination.totalItems) %></span>
+                    de
+                    <span class="font-medium"><%= pagination.totalItems %></span>
+                    resultados
+                  </p>
+                </div>
+                <div>
+                  <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                    <% if (pagination.current > 1) { %>
+                    <a
+                      href="/loans?<%= new URLSearchParams({...filters, page: pagination.current - 1}) %>"
+                      class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                    >
+                      <span class="sr-only">Anterior</span>
+                      <i class="fas fa-chevron-left"></i>
+                    </a>
+                    <% } %>
+
+                    <% for(let i = 1; i <= pagination.total; i++) { %>
+                    <% if (
+                      i === 1 ||
+                      i === pagination.total ||
+                      (i >= pagination.current - 2 && i <= pagination.current + 2)
+                    ) { %>
+                    <a
+                      href="/loans?<%= new URLSearchParams({...filters, page: i}) %>"
+                      class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium <%= pagination.current === i ? 'text-indigo-600 bg-indigo-50 border-indigo-500 z-10' : 'text-gray-500 hover:bg-gray-50' %>"
+                    >
+                      <%= i %>
+                    </a>
+                    <% } else if (
+                      i === pagination.current - 3 ||
+                      i === pagination.current + 3
+                    ) { %>
+                    <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
+                      ...
+                    </span>
+                    <% } %>
+                    <% } %>
+
+                    <% if (pagination.current < pagination.total) { %>
+                    <a
+                      href="/loans?<%= new URLSearchParams({...filters, page: pagination.current + 1}) %>"
+                      class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                    >
+                      <span class="sr-only">Siguiente</span>
+                      <i class="fas fa-chevron-right"></i>
+                    </a>
+                    <% } %>
+                  </nav>
+                </div>
+              </div>
+            </div>
+          </div>
+          <% } %>
+
+          <% } else { %>
+          <div class="text-center py-16">
+            <div
+              class="mx-auto h-24 w-24 text-indigo-300 bg-indigo-100 rounded-full flex items-center justify-center"
+            >
+              <i class="fas fa-book-reader text-4xl"></i>
+            </div>
+            <h3 class="mt-4 text-lg font-medium text-gray-900">
+              No hay préstamos registrados
+            </h3>
+            <p class="mt-2 text-base text-gray-500">
+              Comienza registrando un nuevo préstamo.
+            </p>
+            <div class="mt-6">
+              <a
+                href="/loans/add"
+                class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                <i class="fas fa-plus mr-2"></i>
+                Registrar mi primer préstamo
+              </a>
+            </div>
+          </div>
+          <% } %>
+        </div>
+      </div>
+
+      <footer class="bg-white border-t border-gray-200 py-4">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <p class="text-center text-sm text-gray-500">
+            © <%= new Date().getFullYear() %> Sistema de Gestión de Biblioteca
+          </p>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
