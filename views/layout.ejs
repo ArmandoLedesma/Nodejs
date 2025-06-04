@@ -113,9 +113,20 @@
                 <i
                   class="fas fa-users text-indigo-300 group-hover:text-white transition-colors duration-200"
                 ></i>
+                <span                  class="transform translate-x-0 transition-transform duration-200"
+                  >Usuarios</span
+                >
+              </a>
+              <a
+                href="/loans"
+                class="flex items-center space-x-3 p-3 rounded-lg hover:bg-indigo-600/50 active:bg-indigo-700/50 transition-all duration-200 text-white group <%= path === '/loans' ? 'bg-indigo-800/50 shadow-lg' : '' %>"
+              >
+                <i
+                  class="fas fa-book-reader text-indigo-300 group-hover:text-white transition-colors duration-200"
+                ></i>
                 <span
                   class="transform translate-x-0 transition-transform duration-200"
-                  >Usuarios</span
+                  >Préstamos</span
                 >
               </a>
             </nav>
@@ -199,8 +210,7 @@
                 >
               </a>
               <div class="border-t border-indigo-600/50 my-2"></div>
-              <a
-                href="/users"
+              <a                href="/users"
                 class="flex items-center space-x-4 p-3 rounded-lg hover:bg-indigo-600/50 active:bg-indigo-700/50 transition-all duration-200 text-white <%= path === '/users' ? 'bg-indigo-800/50 shadow-lg' : '' %>"
               >
                 <i
@@ -209,6 +219,18 @@
                 <span
                   class="overflow-hidden opacity-0 transform -translate-x-3 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap"
                   >Usuarios</span
+                >
+              </a>
+              <a
+                href="/loans"
+                class="flex items-center space-x-4 p-3 rounded-lg hover:bg-indigo-600/50 active:bg-indigo-700/50 transition-all duration-200 text-white <%= path === '/loans' ? 'bg-indigo-800/50 shadow-lg' : '' %>"
+              >
+                <i
+                  class="fas fa-book-reader text-indigo-300 flex-shrink-0 group-hover:text-white transition-colors duration-200"
+                ></i>
+                <span
+                  class="overflow-hidden opacity-0 transform -translate-x-3 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap"
+                  >Préstamos</span
                 >
               </a>
             </nav>

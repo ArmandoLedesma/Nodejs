@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />    
+    <title>Nuevo Préstamo - Biblioteca</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/airbnb.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
+    <style>
+      .flatpickr-calendar {
+        animation: fpFadeInDown 300ms ease-out;
+      }
+      .flatpickr-day.selected {
+        background: #4F46E5 !important;
+        border-color: #4F46E5 !important;
+      }
+      .flatpickr-day:hover {
+        background: #E0E7FF !important;
+      }
+      .flatpickr-day.today {
+        border-color: #4F46E5 !important;
+      }
+      @keyframes fpFadeInDown {
+        from {
+          opacity: 0;
+          transform: translate3d(0, -20px, 0);
+        }
+        to {
+          opacity: 1;
+          transform: translate3d(0, 0, 0);
+        }
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50">
+    <div class="min-h-screen flex flex-col">
+      <!-- Main Content -->
+      <div class="py-12">
+        <div class="max-w-md mx-auto sm:px-6 lg:px-8">
+          <div class="bg-white py-8 px-4 shadow-lg sm:rounded-lg sm:px-10 border border-gray-100">
+            <!-- Header -->
+            <div class="sm:mx-auto sm:w-full sm:max-w-md mb-6">
+              <div class="flex justify-center">
+                <div class="h-16 w-16 rounded-full bg-indigo-200 flex items-center justify-center">
+                  <i class="fas fa-book-reader text-indigo-700 text-2xl"></i>
+                </div>
+              </div>
+              <h2 class="mt-4 text-center text-3xl font-extrabold text-gray-900">
+                Nuevo Préstamo
+              </h2>
+              <p class="mt-2 text-center text-sm text-gray-600">
+                Registra un nuevo préstamo de libro
+              </p>
+            </div>
+
+            <!-- Error Messages -->
+            <% if (messages.error) { %>
+            <div class="mb-6 rounded-md bg-red-50 p-4 border-l-4 border-red-500">
+              <div class="flex items-center">
+                <i class="fas fa-exclamation-circle text-red-500 mr-3"></i>
+                <p class="text-sm font-medium text-red-800"><%- messages.error %></p>
+              </div>
+            </div>
+            <% } %>
+
+            <!-- Form -->
+            <form action="/loans/add" method="POST" class="space-y-6">
+              <!-- User Field -->
+              <div>
+                <label for="user_id" class="block text-sm font-medium text-gray-700">
+                  Usuario
+                </label>
+                <div class="mt-1 relative rounded-md shadow-sm">
+                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <i class="fas fa-user text-gray-400"></i>
+                  </div>                  <select
+                    id="user_id"
+                    name="user_id"
+                    class="pl-10 appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    required
+                  >
+                    <option value="">Seleccione un usuario</option>
+                    <% users.forEach(function(user) { %>
+                    <option value="<%= user.id %>" <%= user_id == user.id ? 'selected' : '' %>>
+                      <%= user.first_name %> <%= user.last_name %>
+                    </option>
+                    <% }); %>
+                  </select>
+                  <% if (user_id) { %>
+                    <p class="mt-1 text-sm text-gray-500">
+                      Documento: <%= users.find(u => u.id == user_id)?.document_number %>
+                    </p>
+                  <% } %>
+                </div>
+              </div>
+
+              <!-- Book Field -->
+              <div>
+                <label for="book_id" class="block text-sm font-medium text-gray-700">
+                  Libro
+                </label>
+                <div class="mt-1 relative rounded-md shadow-sm">
+                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <i class="fas fa-book text-gray-400"></i>
+                  </div>                  <select
+                    id="book_id"
+                    name="book_id"
+                    class="pl-10 appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    required
+                  >
+                    <option value="">Seleccione un libro</option>
+                    <% books.forEach(function(book) { %>
+                    <option value="<%= book.id %>" <%= book_id == book.id ? 'selected' : '' %>>
+                      <%= book.name %>
+                    </option>
+                    <% }); %>
+                  </select>
+                  <% if (book_id) { %>
+                    <p class="mt-1 text-sm text-gray-500">
+                      ISBN: <%= books.find(b => b.id == book_id)?.isbn %>
+                    </p>
+                  <% } %>
+                </div>
+              </div>
+
+              <!-- Expected Return Date Field -->
+              <div>
+                <label for="expected_return_date" class="block text-sm font-medium text-gray-700">
+                  Fecha de Devolución Esperada
+                </label>
+                <div class="mt-1 relative rounded-md shadow-sm">
+                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <i class="fas fa-calendar text-gray-400"></i>
+                  </div>                  <input type="text" 
+                    name="expected_return_date" 
+                    id="expected_return_date"
+                    placeholder="Seleccione una fecha"
+                    required
+                    class="pl-10 appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    value="<%= expected_return_date %>"
+                  >
+                </div>
+              </div>
+
+              <!-- Notes Field -->
+              <div>
+                <label for="notes" class="block text-sm font-medium text-gray-700">
+                  Notas
+                </label>
+                <div class="mt-1">
+                  <textarea
+                    name="notes"
+                    id="notes"
+                    rows="3"
+                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    placeholder="Observaciones adicionales sobre el préstamo"
+                  ><%= notes %></textarea>
+                </div>
+              </div>
+
+              <!-- Submit Button -->
+              <div class="flex items-center justify-between space-x-3">
+                <a href="/loans"
+                  class="flex-1 bg-gray-100 py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 text-center">
+                  Cancelar
+                </a>
+                <button type="submit"
+                  class="flex-1 bg-indigo-600 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                  Registrar Préstamo
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>    
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const today = new Date();
+        const maxDate = new Date();
+        maxDate.setMonth(maxDate.getMonth() + 3); // Máximo 3 meses de préstamo
+
+        // Inicializar el selector de fecha
+        const fp = flatpickr("#expected_return_date", {
+          locale: "es",
+          dateFormat: "Y-m-d",
+          minDate: "today",
+          maxDate: maxDate,
+          defaultDate: "today",
+          altInput: true,
+          altFormat: "l, j \\de F \\de Y",
+          disableMobile: "true", // Forzar uso del calendario Flatpickr en móviles
+          monthSelectorType: "static",
+          animate: true,
+          position: "auto",
+          plugins: [],
+          onOpen: function() {
+            // Añadir mensaje informativo
+            const calendar = document.querySelector('.flatpickr-calendar');
+            if (!calendar.querySelector('.date-info')) {
+              const infoDiv = document.createElement('div');
+              infoDiv.className = 'date-info text-xs text-gray-500 px-3 py-2 border-t';
+              infoDiv.textContent = 'Seleccione una fecha dentro de los próximos 3 meses';
+              calendar.appendChild(infoDiv);
+            }
+          },
+          onChange: function(selectedDates, dateStr) {
+            const selectedDate = selectedDates[0];
+            
+            // Validar que la fecha no sea anterior a hoy
+            if (selectedDate < today.setHours(0,0,0,0)) {
+              this.setDate(today);
+              showDateError('La fecha no puede ser anterior a hoy');
+              return;
+            }
+
+            // Validar que no exceda 3 meses
+            if (selectedDate > maxDate) {
+              this.setDate(maxDate);
+              showDateError('El préstamo no puede exceder 3 meses');
+              return;
+            }
+
+            clearDateError();
+          }
+        });
+
+        // Función para mostrar errores
+        function showDateError(message) {
+          clearDateError();
+          const errorDiv = document.createElement('div');
+          errorDiv.className = 'date-error text-xs text-red-500 mt-1';
+          errorDiv.textContent = message;
+          document.getElementById('expected_return_date').parentNode.appendChild(errorDiv);
+        }
+
+        // Función para limpiar errores
+        function clearDateError() {
+          const errorDiv = document.querySelector('.date-error');
+          if (errorDiv) errorDiv.remove();
+        }
+
+        // Agregar clases de Tailwind al input alternativo
+        setTimeout(() => {
+          const altInput = document.querySelector(".flatpickr-input.form-control.input");
+          if (altInput) {
+            altInput.classList.add(
+              "pl-10",
+              "appearance-none",
+              "block",
+              "w-full",
+              "px-3",
+              "py-2",
+              "border",
+              "border-gray-300",
+              "rounded-md",
+              "shadow-sm",
+              "placeholder-gray-400",
+              "focus:outline-none",
+              "focus:ring-indigo-500",
+              "focus:border-indigo-500",
+              "sm:text-sm"
+            );
+          }
+        }, 100);
+      });
+    </script>
+  </body>
+</html>
